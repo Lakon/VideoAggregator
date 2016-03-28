@@ -65,6 +65,7 @@
     <Compile Include="Episode.cs" />
     <Compile Include="Season.cs" />
     <Compile Include="Show.cs" />
+    <Compile Include="Properties\GuideBoxApi.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
