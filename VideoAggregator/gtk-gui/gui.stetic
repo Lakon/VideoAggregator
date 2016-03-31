@@ -32,7 +32,7 @@
                 <property name="MemberName">Back</property>
                 <property name="ShowArrow">False</property>
                 <property name="IconSize">Menu</property>
-                <node name="__gtksharp_139_Stetic_Editor_ActionToolbar" type="Toolbar">
+                <node name="toolbar1" type="Toolbar">
                   <node type="Toolitem" action="goBackAction" />
                 </node>
               </widget>
@@ -47,21 +47,6 @@
                 <property name="MemberName" />
                 <property name="Spacing">6</property>
                 <child>
-                  <widget class="Gtk.Button" id="button1">
-                    <property name="MemberName" />
-                    <property name="CanFocus">True</property>
-                    <property name="Type">TextOnly</property>
-                    <property name="Label" translatable="yes">Option</property>
-                    <property name="UseUnderline">True</property>
-                  </widget>
-                  <packing>
-                    <property name="Position">0</property>
-                    <property name="AutoSize">True</property>
-                    <property name="Expand">False</property>
-                    <property name="Fill">False</property>
-                  </packing>
-                </child>
-                <child>
                   <widget class="Gtk.ComboBoxEntry" id="comboboxentry1">
                     <property name="MemberName" />
                     <property name="IsTextCombo">True</property>
@@ -70,7 +55,7 @@ Youtube
 Amazon</property>
                   </widget>
                   <packing>
-                    <property name="Position">1</property>
+                    <property name="Position">0</property>
                     <property name="AutoSize">True</property>
                     <property name="Expand">False</property>
                     <property name="Fill">False</property>
@@ -82,7 +67,7 @@ Amazon</property>
                     <property name="HasWindow">False</property>
                   </widget>
                   <packing>
-                    <property name="Position">2</property>
+                    <property name="Position">1</property>
                     <property name="AutoSize">True</property>
                   </packing>
                 </child>
