@@ -10,13 +10,17 @@ namespace VideoAggregator
 
 
 
-		public string getShowID(string showID)
+		public string getSearchID(string searchID)
 		{
 			int limit1 = 1;
 			int limit2 = 25;
 
-			showID = apiHome + apiKey + limit1.ToString () + "/" + limit2.ToString () + "/";
-			return showID;
+
+
+			searchID = apiHome + apiKey + limit1.ToString () + "/" + limit2.ToString () + "/";
+
+
+			return searchID;
 
 		}
 
