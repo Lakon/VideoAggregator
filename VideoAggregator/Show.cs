@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 
 namespace VideoAggregator {
-    class Show {
-        public String name;
-        public int id;
-        public String thumbURL;
-        public String desc;
+    public class Show {
+        public string title;
+		public string id;
+		public string thumbURL;
+		public string desc;
         public List<Season> seasons;
 
-        public Show(String name, int id) {
-            this.name = name;
+		public Show(string title, string id) {
+			this.title = title;
             this.id = id;
             thumbURL = null;
             desc = "";

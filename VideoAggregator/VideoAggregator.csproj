@@ -50,6 +50,9 @@
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="Mono.Posix" />
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="gtk-gui\gui.stetic">
@@ -65,7 +68,11 @@
     <Compile Include="Episode.cs" />
     <Compile Include="Season.cs" />
     <Compile Include="Show.cs" />
-    <Compile Include="GuideBoxApi.cs" />
+    <Compile Include="Source.cs" />
+    <Compile Include="GuideBoxAPIWrapper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
 </Project>
