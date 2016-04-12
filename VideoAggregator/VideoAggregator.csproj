@@ -62,7 +62,6 @@
   <ItemGroup>
     <Compile Include="gtk-gui\generated.cs" />
     <Compile Include="MainWindow.cs" />
-    <Compile Include="gtk-gui\MainWindow.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Episode.cs" />
@@ -70,6 +69,15 @@
     <Compile Include="Show.cs" />
     <Compile Include="Source.cs" />
     <Compile Include="GuideBoxAPIWrapper.cs" />
+    <Compile Include="ShowResultsWidget.cs" />
+    <Compile Include="gtk-gui\VideoAggregator.ShowResultsWidget.cs" />
+    <Compile Include="gtk-gui\VideoAggregator.MainWindow.cs" />
+    <Compile Include="SeasonResultsWidget.cs" />
+    <Compile Include="gtk-gui\VideoAggregator.SeasonResultsWidget.cs" />
+    <Compile Include="EpisodeResultsWidget.cs" />
+    <Compile Include="gtk-gui\VideoAggregator.EpisodeResultsWidget.cs" />
+    <Compile Include="SourcesWidget.cs" />
+    <Compile Include="gtk-gui\VideoAggregator.SourcesWidget.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

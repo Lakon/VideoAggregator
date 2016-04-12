@@ -8,9 +8,9 @@ namespace VideoAggregator {
         public string desc;
         public List<Episode> episodes;
 
-        public Season(string season, List<Episode> episodes) {
-            this.num = season;
-            this.episodes = episodes;
+        public Season(string num) {
+            this.num = num;
+            this.episodes = null;
             thumbURL = null;
             desc = "";
         }
