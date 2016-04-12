@@ -73,11 +73,19 @@ namespace VideoAggregator
 		{
 			this.container.Remove(embeddedWidget);
 			//previousWidgets.Push (new Gtk.Widget(embeddedWidget));
-
+			try{
 			List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (this.searchEntry.Text);
-			embeddedWidget = new ShowResultsWidget (this, shows);
 
-			this.container.Add (embeddedWidget);
+
+				embeddedWidget = new ShowResultsWidget (this, shows);
+
+				this.container.Add (embeddedWidget);
+			} 
+			catch(ArgumentException f) when (this.searchEntry.Text == null)
+			{
+				Console.WriteLine("No Search Information Was Entered.", f);
+//				Application.Quit () = false;
+			}	
 		}
 	}
 }
