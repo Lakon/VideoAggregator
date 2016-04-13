@@ -17,10 +17,11 @@ namespace VideoAggregator
 			this.treeview.AppendColumn ("Title", new Gtk.CellRendererText (), "text", 0);
 			this.treeview.AppendColumn ("Thumb URL", new Gtk.CellRendererText (), "text", 1);
 
-			foreach (var show in shows) {
-				showListStore.AppendValues (show.title, show.thumbURL, show);
-			}
 
+				foreach (var show in shows) {
+					showListStore.AppendValues (show.title, show.thumbURL, show);
+				}
+			
 			this.treeview.Model = showListStore;
 			this.ShowAll ();
 		}

@@ -106,16 +106,19 @@ namespace VideoAggregator{
 
 			string JsonData = getAPIData (url);
 			JObject search = JObject.Parse(JsonData);
+			List<Episode> episodes = new List<Episode> ();
 
-			List<JToken> results = search["results"].Children().ToList();
-			List<Episode> episodes = new List<Episode>();
-			foreach (var result in results){
-				var definition = new {title = "", id = "", overview = "", episode_number = "", thumbnail_304x171 = ""};
-				var episode_json = JsonConvert.DeserializeAnonymousType(result.ToString(), definition);
-				Episode episode = new Episode (season, episode_json.episode_number, episode_json.title, episode_json.id);
-				episode.desc = episode_json.overview;
-				episode.thumbURL = episode_json.thumbnail_304x171;
-				episodes.Add(episode);
+			if (search != null) {	
+				List<JToken> results = search ["results"].Children ().ToList ();
+
+				foreach (var result in results) {
+					var definition = new {title = "", id = "", overview = "", episode_number = "", thumbnail_304x171 = ""};
+					var episode_json = JsonConvert.DeserializeAnonymousType (result.ToString (), definition);
+					Episode episode = new Episode (season, episode_json.episode_number, episode_json.title, episode_json.id);
+					episode.desc = episode_json.overview;
+					episode.thumbURL = episode_json.thumbnail_304x171;
+					episodes.Add (episode);
+				}
 			}
 			return episodes;
 		}

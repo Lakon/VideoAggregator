@@ -15,13 +15,20 @@ namespace VideoAggregator
 			embeddedWidget = new ShowResultsWidget (this, shows);
 			this.container.Add (embeddedWidget);
 			this.ShowAll ();
+
+		
+		
+		
 		}
 
 		protected void OnDeleteEvent (object sender, DeleteEventArgs a)
 		{
+
 			Application.Quit ();
 			a.RetVal = true;
 		}
+
+
 		public void showSelected(Show show){
 			this.container.Remove(embeddedWidget);
 			//previousWidgets.Push (new Gtk.Widget(embeddedWidget));
@@ -31,6 +38,8 @@ namespace VideoAggregator
 
 			this.container.Add (embeddedWidget);
 		}
+
+
 		public void seasonSelected(Show show, int s){
 			this.container.Remove(embeddedWidget);
 			//previousWidgets.Push (new Gtk.Widget(embeddedWidget));
@@ -41,6 +50,8 @@ namespace VideoAggregator
 
 			this.container.Add (embeddedWidget);
 		}
+
+
 		public void episodeSelected(Episode episode){
 			this.container.Remove(embeddedWidget);
 			//previousWidgets.Push (new Gtk.Widget(embeddedWidget));
@@ -50,12 +61,16 @@ namespace VideoAggregator
 
 			this.container.Add (embeddedWidget);
 		}
+
 		public void sourceSelected(string source, List<string> urls){
 			Console.WriteLine (source);
 			foreach (string url in urls) {
 				Console.WriteLine (url);
 			}
 			//link out
+
+			//This is the command in windows to start Firefox except .exe not.app
+			System.Diagnostics.Process.Start("firefox.app", "www.hulu.com" );
 		}
 
 		protected void OnBackButtonClicked (object sender, EventArgs e)
@@ -73,19 +88,15 @@ namespace VideoAggregator
 		{
 			this.container.Remove(embeddedWidget);
 			//previousWidgets.Push (new Gtk.Widget(embeddedWidget));
-			try{
-			List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (this.searchEntry.Text);
 
+			string searchText = null;
+			searchText = searchEntry.Text;
 
+				List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (searchText);
 				embeddedWidget = new ShowResultsWidget (this, shows);
-
 				this.container.Add (embeddedWidget);
-			} 
-			catch(ArgumentException f) when (this.searchEntry.Text == null)
-			{
-				Console.WriteLine("No Search Information Was Entered.", f);
-//				Application.Quit () = false;
-			}	
+
+
 		}
 	}
 }
