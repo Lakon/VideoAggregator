@@ -92,10 +92,14 @@ namespace VideoAggregator
 			string searchText = null;
 			searchText = searchEntry.Text;
 
+			if (searchText != null) {
 				List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (searchText);
 				embeddedWidget = new ShowResultsWidget (this, shows);
 				this.container.Add (embeddedWidget);
-
+			} else 
+			{
+				;
+			}
 
 		}
 	}
