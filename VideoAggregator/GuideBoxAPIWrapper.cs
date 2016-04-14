@@ -59,12 +59,20 @@ namespace VideoAggregator{
 			//string fileName = "getTVShowIds_0_25_all.txt";
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
+			JObject search = new JObject();
+	
 
-			string JsonData = getAPIData (url);
-			JObject search = JObject.Parse(JsonData);
+			//try{
+			//string JsonData = getAPIData (url);
+			//search = JObject.Parse(JsonData);
 
 			List<JToken> results = search["results"].Children().ToList();
-			List<Show> shows = new List<Show>();
+				List<Show> shows = new List<Show>();//}
+			//catch(NullReferenceException ex){
+
+				//Console.WriteLine ("Error: ", ex);
+
+			//}
 			foreach (var result in results){
 				var definition = new {title = "", id = "", artwork_304x171 = ""};
 				var show_json = JsonConvert.DeserializeAnonymousType(result.ToString(), definition);
@@ -72,6 +80,7 @@ namespace VideoAggregator{
 				show.thumbURL = show_json.artwork_304x171;
 				shows.Add(show);
 			}
+
 			return shows;
 		}
 
@@ -80,9 +89,16 @@ namespace VideoAggregator{
 			//string fileName = "powers_search.txt";
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
+			JObject search = new JObject();
 
-			string JsonData = getAPIData (url);
-			JObject search = JObject.Parse(JsonData);
+			try{
+				string JsonData = getAPIData (url);
+				search = JObject.Parse(JsonData);}
+			catch(NullReferenceException ex){
+
+				Console.WriteLine ("Error: ", ex);
+				Console.ReadLine ();
+			}
 
 			List<JToken> results = search["results"].Children().ToList();
 			List<Show> shows = new List<Show>();
@@ -101,9 +117,16 @@ namespace VideoAggregator{
 			//string fileName = "daredevil_25147_numofseasons.txt";
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
+			JObject search = new JObject();
 
-			string JsonData = getAPIData (url);
-			JObject search = JObject.Parse(JsonData);
+			try{
+				string JsonData = getAPIData (url);
+				search = JObject.Parse(JsonData);}
+			catch(Exception ex){
+
+				Console.WriteLine ("Error: ", ex);
+				Console.ReadLine ();
+			}
 
 			return (int)search ["total_results"];
 		}
@@ -116,9 +139,10 @@ namespace VideoAggregator{
 
 			string JsonData = getAPIData (url);
 			JObject search = JObject.Parse(JsonData);
+
 			List<Episode> episodes = new List<Episode> ();
 
-			if (search != null) {	
+			//if (search != null) {	
 				List<JToken> results = search ["results"].Children ().ToList ();
 
 				foreach (var result in results) {
@@ -128,7 +152,7 @@ namespace VideoAggregator{
 					episode.desc = episode_json.overview;
 					episode.thumbURL = episode_json.thumbnail_304x171;
 					episodes.Add (episode);
-				}
+				//}
 			}
 			return episodes;
 		}

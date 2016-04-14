@@ -20,6 +20,9 @@ namespace VideoAggregator
 
 				foreach (var show in shows) {
 					showListStore.AppendValues (show.title, show.thumbURL, show);
+				//Icon Build Here
+				//this.treeview.Image(show.thumbURL);
+				//http://stackoverflow.com/questions/3887228/gtkbutton-just-shows-text-but-no-image
 				}
 			
 			this.treeview.Model = showListStore;

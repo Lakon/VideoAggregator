@@ -18,6 +18,7 @@ namespace VideoAggregator
 
 			foreach (var ep in season.episodes) {
 				episodeListStore.AppendValues (ep.title, ep.thumbURL, ep);
+				//Icon Build Here
 			}
 
 			this.treeview.Model = episodeListStore;

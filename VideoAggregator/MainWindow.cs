@@ -16,9 +16,7 @@ namespace VideoAggregator
 			this.container.Add (embeddedWidget);
 			this.ShowAll ();
 
-		
-		
-		
+				
 		}
 
 		protected void OnDeleteEvent (object sender, DeleteEventArgs a)
@@ -36,6 +34,7 @@ namespace VideoAggregator
 			show.numOfSeasons = GuideBoxAPIWrapper.getTVShowSeasons (show.id);
 			embeddedWidget = new SeasonResultsWidget (this, show);
 
+
 			this.container.Add (embeddedWidget);
 		}
 
@@ -47,6 +46,7 @@ namespace VideoAggregator
 			Season season = new Season(s.ToString());
 			season.episodes = GuideBoxAPIWrapper.getTVShowEpisodes (show.id, s.ToString());
 			embeddedWidget = new EpisodeResultsWidget (this, season);
+
 
 			this.container.Add (embeddedWidget);
 		}
@@ -96,6 +96,8 @@ namespace VideoAggregator
 				List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (searchText);
 				embeddedWidget = new ShowResultsWidget (this, shows);
 				this.container.Add (embeddedWidget);
+				//Add Icon Build
+
 			} else 
 			{
 				;
