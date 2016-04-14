@@ -44,6 +44,16 @@ namespace VideoAggregator{
 			return text;
 		}
 
+		/*  private __(object sender, EventArgs e){   ******EXAMPLE JSON CODE TO GET IMAGE 
+		 * 		WebRequest wr = WebRequest.Create("http://pixplorer.co.uk/getimage/" + string.Join("+",this.textBox1.Text.Split(' ')));
+		 * 		WebResponse res = wr.GetResponse();
+		 * 		using (StreamReader reader = new StreamReader(res.GetResponseStream())){
+		 * 			string json = reader.ReadToEnd(); 
+		 * 			dynamic images = JsonConvert.DeserializedObject(json); 
+		 * 			this.pictureBox1.Load(images["0"],imglink.Value); }
+		 * 	}
+		*/
+
 		public static List<Show> getTVShowIds(int limit1, int limit2, Source source){
 			string url = apiBaseURL + "shows/all/" + limit1.ToString() + "/" + limit2.ToString() + "/" + SourceToString(source) + "/web";
 			//string fileName = "getTVShowIds_0_25_all.txt";
@@ -212,10 +222,20 @@ namespace VideoAggregator{
 				var show_json = JsonConvert.DeserializeAnonymousType(result.ToString(), definition);
 				Show show = new Show (show_json.title, show_json.id);
 				show.thumbURL = show_json.poster_240x342;
+
+				//result = image.thumbURL;  *******
 				shows.Add(show);
 			}
 			return shows;
 		}
+
+		/* 
+		 * private static Bitmap GetImageFromURL (string url) {  //Another attempt at get Image****
+		 * 	url thumbURL = new URL(url); 
+		 * 	Bitmap bmp = BitmapFactory.DecodeStream (url.OpenConnection ().InputStream); 
+		 * 	return bmp; 
+		 * } 
+		*/
 
 		public static List<Show> getMovieIds(string title){
 			string url = apiBaseURL + "search/movie/title/" + WebUtility.UrlEncode(WebUtility.UrlEncode(WebUtility.UrlEncode(title))) + "/fuzzy";
