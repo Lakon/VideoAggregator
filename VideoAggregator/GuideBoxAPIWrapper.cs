@@ -33,12 +33,22 @@ namespace VideoAggregator{
 
 		private static string getAPIData(string url){
 			string text = "";
+			int timeout = 0;
+			int counter = 0;
+
+			while (timeout == 0){
 			HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
 			HttpWebResponse response = (HttpWebResponse) request.GetResponse();
-			if (response.StatusCode == HttpStatusCode.OK && response.ContentLength > 0){
-				TextReader reader = new StreamReader(response.GetResponseStream());
-				text = reader.ReadToEnd();
-			}
+				if (response.StatusCode == HttpStatusCode.OK && response.ContentLength > 0) {
+					TextReader reader = new StreamReader (response.GetResponseStream ());
+					text = reader.ReadToEnd ();
+					if (text != null ||  counter == 5) {
+						timeout = 1;
+					}
+					counter++;
+				}
+				}
+
 			//File.WriteAllText (fileName, text);
 			//Console.WriteLine (url);
 			return text;
@@ -50,17 +60,10 @@ namespace VideoAggregator{
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
 			JObject search = new JObject();
-			//int timeout = 1;
 
-
-			//while (timeout == 1) {
 				string JsonData = getAPIData (url);
 				search = JObject.Parse (JsonData);
-				//if (search != null) {
-				//	timeout = 2;
-				
-				//}
-			//}
+
 			List<JToken> results = search["results"].Children().ToList();
 			List<Show> shows = new List<Show>();
 
@@ -81,17 +84,9 @@ namespace VideoAggregator{
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
 			JObject search = new JObject();
-			//int timeout = 1;
 
-
-			//while (timeout == 1) {
 				string JsonData = getAPIData (url);
 				search = JObject.Parse (JsonData);
-				//if (search != null) {
-				//	timeout = 2;
-
-				//}
-			//}
 
 			List<JToken> results = search["results"].Children().ToList();
 			List<Show> shows = new List<Show>();
@@ -111,17 +106,9 @@ namespace VideoAggregator{
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
 			JObject search = new JObject();
-			//int timeout = 1;
 
-
-			//while (timeout == 1) {
 				string JsonData = getAPIData (url);
 				search = JObject.Parse (JsonData);
-				//if (search != null) {
-				//	timeout = 2;
-
-				//}
-			//}
 
 			return (int)search ["total_results"];
 		}
@@ -132,17 +119,9 @@ namespace VideoAggregator{
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
 			JObject search = new JObject();
-			//int timeout = 1;
 
-
-			//while (timeout == 1) {
 				string JsonData = getAPIData (url);
 				search = JObject.Parse (JsonData);
-				//if (search != null) {
-					//timeout = 2;
-
-				//}
-			//}
 
 			List<Episode> episodes = new List<Episode> ();
 
@@ -240,17 +219,9 @@ namespace VideoAggregator{
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
 			JObject search = new JObject();
-			//int timeout = 1;
 
-
-			//while (timeout == 1) {
 				string JsonData = getAPIData (url);
 				search = JObject.Parse (JsonData);
-				//if (search != null) {
-					//timeout = 2;
-
-				//}
-			//}
 
 			List<JToken> results = search["results"].Children().ToList();
 			List<Show> shows = new List<Show>();
@@ -272,17 +243,10 @@ namespace VideoAggregator{
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
 			JObject search = new JObject();
-			//int timeout = 1;
 
-
-			//while (timeout == 1) {
 				string JsonData = getAPIData (url);
 				search = JObject.Parse (JsonData);
-				//if (search != null) {
-					//timeout = 2;
 
-				//}
-			//}
 			List<JToken> results = search["results"].Children().ToList();
 			List<Show> shows = new List<Show>();
 			foreach (var result in results){
