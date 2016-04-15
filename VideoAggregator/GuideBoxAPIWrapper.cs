@@ -60,26 +60,29 @@ namespace VideoAggregator{
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
 			JObject search = new JObject();
-	
+
 
 			//try{
-			//string JsonData = getAPIData (url);
-			//search = JObject.Parse(JsonData);
+			string JsonData = getAPIData (url);
+			search = JObject.Parse(JsonData);
 
 			List<JToken> results = search["results"].Children().ToList();
-				List<Show> shows = new List<Show>();//}
-			//catch(NullReferenceException ex){
+			List<Show> shows = new List<Show>();
 
-				//Console.WriteLine ("Error: ", ex);
-
-			//}
 			foreach (var result in results){
 				var definition = new {title = "", id = "", artwork_304x171 = ""};
 				var show_json = JsonConvert.DeserializeAnonymousType(result.ToString(), definition);
 				Show show = new Show (show_json.title, show_json.id);
 				show.thumbURL = show_json.artwork_304x171;
-				shows.Add(show);
-			}
+				shows.Add(show);}
+			//}
+				
+				//catch (NullReferenceException ex){
+
+				//Console.WriteLine ("Error: ", ex);
+
+				//}
+
 
 			return shows;
 		}
