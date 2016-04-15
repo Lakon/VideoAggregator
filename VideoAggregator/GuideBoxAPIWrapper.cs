@@ -44,28 +44,23 @@ namespace VideoAggregator{
 			return text;
 		}
 
-		/*  private __(object sender, EventArgs e){   ******EXAMPLE JSON CODE TO GET IMAGE 
-		 * 		WebRequest wr = WebRequest.Create("http://pixplorer.co.uk/getimage/" + string.Join("+",this.textBox1.Text.Split(' ')));
-		 * 		WebResponse res = wr.GetResponse();
-		 * 		using (StreamReader reader = new StreamReader(res.GetResponseStream())){
-		 * 			string json = reader.ReadToEnd(); 
-		 * 			dynamic images = JsonConvert.DeserializedObject(json); 
-		 * 			this.pictureBox1.Load(images["0"],imglink.Value); }
-		 * 	}
-		*/
-
 		public static List<Show> getTVShowIds(int limit1, int limit2, Source source){
 			string url = apiBaseURL + "shows/all/" + limit1.ToString() + "/" + limit2.ToString() + "/" + SourceToString(source) + "/web";
 			//string fileName = "getTVShowIds_0_25_all.txt";
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
 			JObject search = new JObject();
+			int timeout = 1;
 
 
-			//try{
-			string JsonData = getAPIData (url);
-			search = JObject.Parse(JsonData);
-
+			while (timeout == 1) {
+				string JsonData = getAPIData (url);
+				search = JObject.Parse (JsonData);
+				if (search != null) {
+					timeout = 2;
+				
+				}
+			}
 			List<JToken> results = search["results"].Children().ToList();
 			List<Show> shows = new List<Show>();
 
@@ -74,15 +69,8 @@ namespace VideoAggregator{
 				var show_json = JsonConvert.DeserializeAnonymousType(result.ToString(), definition);
 				Show show = new Show (show_json.title, show_json.id);
 				show.thumbURL = show_json.artwork_304x171;
-				shows.Add(show);}
-			//}
-				
-				//catch (NullReferenceException ex){
-
-				//Console.WriteLine ("Error: ", ex);
-
-				//}
-
+				shows.Add(show);
+			}
 
 			return shows;
 		}
@@ -93,14 +81,16 @@ namespace VideoAggregator{
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
 			JObject search = new JObject();
+			int timeout = 1;
 
-			try{
+
+			while (timeout == 1) {
 				string JsonData = getAPIData (url);
-				search = JObject.Parse(JsonData);}
-			catch(NullReferenceException ex){
+				search = JObject.Parse (JsonData);
+				if (search != null) {
+					timeout = 2;
 
-				Console.WriteLine ("Error: ", ex);
-				Console.ReadLine ();
+				}
 			}
 
 			List<JToken> results = search["results"].Children().ToList();
@@ -121,14 +111,16 @@ namespace VideoAggregator{
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
 			JObject search = new JObject();
+			int timeout = 1;
 
-			try{
+
+			while (timeout == 1) {
 				string JsonData = getAPIData (url);
-				search = JObject.Parse(JsonData);}
-			catch(Exception ex){
+				search = JObject.Parse (JsonData);
+				if (search != null) {
+					timeout = 2;
 
-				Console.WriteLine ("Error: ", ex);
-				Console.ReadLine ();
+				}
 			}
 
 			return (int)search ["total_results"];
@@ -139,13 +131,22 @@ namespace VideoAggregator{
 			//string fileName = "daredevil_25147_season1.txt";
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
+			JObject search = new JObject();
+			int timeout = 1;
 
-			string JsonData = getAPIData (url);
-			JObject search = JObject.Parse(JsonData);
+
+			while (timeout == 1) {
+				string JsonData = getAPIData (url);
+				search = JObject.Parse (JsonData);
+				if (search != null) {
+					timeout = 2;
+
+				}
+			}
 
 			List<Episode> episodes = new List<Episode> ();
 
-			//if (search != null) {	
+
 				List<JToken> results = search ["results"].Children ().ToList ();
 
 				foreach (var result in results) {
@@ -155,7 +156,7 @@ namespace VideoAggregator{
 					episode.desc = episode_json.overview;
 					episode.thumbURL = episode_json.thumbnail_304x171;
 					episodes.Add (episode);
-				//}
+
 			}
 			return episodes;
 		}
@@ -238,9 +239,18 @@ namespace VideoAggregator{
 			//string fileName = "getMovieIds_0_25_all.txt";
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
+			JObject search = new JObject();
+			int timeout = 1;
 
-			string JsonData = getAPIData (url);
-			JObject search = JObject.Parse(JsonData);
+
+			while (timeout == 1) {
+				string JsonData = getAPIData (url);
+				search = JObject.Parse (JsonData);
+				if (search != null) {
+					timeout = 2;
+
+				}
+			}
 
 			List<JToken> results = search["results"].Children().ToList();
 			List<Show> shows = new List<Show>();
@@ -256,23 +266,23 @@ namespace VideoAggregator{
 			return shows;
 		}
 
-		/* 
-		 * private static Bitmap GetImageFromURL (string url) {  //Another attempt at get Image****
-		 * 	url thumbURL = new URL(url); 
-		 * 	Bitmap bmp = BitmapFactory.DecodeStream (url.OpenConnection ().InputStream); 
-		 * 	return bmp; 
-		 * } 
-		*/
-
 		public static List<Show> getMovieIds(string title){
 			string url = apiBaseURL + "search/movie/title/" + WebUtility.UrlEncode(WebUtility.UrlEncode(WebUtility.UrlEncode(title))) + "/fuzzy";
 			//string fileName = "big_lebowski_search.txt";
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
+			JObject search = new JObject();
+			int timeout = 1;
 
-			string JsonData = getAPIData (url);
-			JObject search = JObject.Parse(JsonData);
 
+			while (timeout == 1) {
+				string JsonData = getAPIData (url);
+				search = JObject.Parse (JsonData);
+				if (search != null) {
+					timeout = 2;
+
+				}
+			}
 			List<JToken> results = search["results"].Children().ToList();
 			List<Show> shows = new List<Show>();
 			foreach (var result in results){

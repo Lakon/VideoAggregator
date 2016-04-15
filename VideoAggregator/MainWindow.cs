@@ -67,10 +67,9 @@ namespace VideoAggregator
 			foreach (string url in urls) {
 				Console.WriteLine (url);
 			}
-			//link out
 
-			//This is the command in windows to start Firefox except .exe not.app
-			System.Diagnostics.Process.Start("firefox.app", "www.hulu.com" );
+			//Will Launch Firefox need to figure out URL
+			System.Diagnostics.Process.Start("/Applications/Firefox.app/Contents/MacOS/Firefox", "www.hulu.com");
 		}
 
 		protected void OnBackButtonClicked (object sender, EventArgs e)
@@ -96,11 +95,15 @@ namespace VideoAggregator
 				List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (searchText);
 				embeddedWidget = new ShowResultsWidget (this, shows);
 				this.container.Add (embeddedWidget);
-				//Add Icon Build
 
 			} else 
 			{
-				;
+				this.Build ();
+				List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (0, 25, Source.All);
+				embeddedWidget = new ShowResultsWidget (this, shows);
+				this.container.Add (embeddedWidget);
+				this.ShowAll ();
+
 			}
 
 		}
