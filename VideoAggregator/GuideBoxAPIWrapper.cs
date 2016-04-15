@@ -50,7 +50,7 @@ namespace VideoAggregator{
 			//string JsonData = getAPIData (url, fileName);
 			//string JsonData = File.ReadAllText(fileName);
 			JObject search = new JObject();
-			int timeout = 1;
+			//int timeout = 1;
 
 
 			//while (timeout == 1) {
