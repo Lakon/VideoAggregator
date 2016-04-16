@@ -8,13 +8,6 @@
     <widget-library name="../bin/Debug/VideoAggregator.exe" internal="true" />
   </import>
   <widget class="Gtk.Window" id="VideoAggregator.MainWindow" design-size="673 533">
-    <action-group name="Default">
-      <action id="goBackAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes" />
-        <property name="StockId">gtk-go-back</property>
-      </action>
-    </action-group>
     <property name="MemberName" />
     <property name="Title" translatable="yes">MainWindow</property>
     <property name="WindowPosition">CenterOnParent</property>
@@ -73,6 +66,7 @@ YouTube</property>
                         <property name="MemberName" />
                         <property name="CanFocus">True</property>
                         <property name="Label" translatable="yes">show</property>
+                        <property name="Active">True</property>
                         <property name="DrawIndicator">True</property>
                         <property name="HasLabel">True</property>
                         <property name="UseUnderline">True</property>

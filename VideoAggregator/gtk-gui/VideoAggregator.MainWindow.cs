@@ -4,10 +4,6 @@ namespace VideoAggregator
 {
 	public partial class MainWindow
 	{
-		private global::Gtk.UIManager UIManager;
-		
-		private global::Gtk.Action goBackAction;
-		
 		private global::Gtk.VBox container;
 		
 		private global::Gtk.HBox hbox1;
@@ -34,12 +30,6 @@ namespace VideoAggregator
 		{
 			global::Stetic.Gui.Initialize (this);
 			// Widget VideoAggregator.MainWindow
-			this.UIManager = new global::Gtk.UIManager ();
-			global::Gtk.ActionGroup w1 = new global::Gtk.ActionGroup ("Default");
-			this.goBackAction = new global::Gtk.Action ("goBackAction", null, null, "gtk-go-back");
-			w1.Add (this.goBackAction, null);
-			this.UIManager.InsertActionGroup (w1, 0);
-			this.AddAccelGroup (this.UIManager.AccelGroup);
 			this.Name = "VideoAggregator.MainWindow";
 			this.Title = global::Mono.Unix.Catalog.GetString ("MainWindow");
 			this.WindowPosition = ((global::Gtk.WindowPosition)(4));
@@ -59,26 +49,26 @@ namespace VideoAggregator
 			this.backButton.UseUnderline = true;
 			this.backButton.Label = global::Mono.Unix.Catalog.GetString ("Back");
 			this.hbox1.Add (this.backButton);
-			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.backButton]));
-			w2.Position = 0;
-			w2.Expand = false;
-			w2.Fill = false;
+			global::Gtk.Box.BoxChild w1 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.backButton]));
+			w1.Position = 0;
+			w1.Expand = false;
+			w1.Fill = false;
 			// Container child hbox1.Gtk.Box+BoxChild
 			this.hbox3 = new global::Gtk.HBox ();
 			this.hbox3.Name = "hbox3";
 			this.hbox3.Spacing = 6;
 			// Container child hbox3.Gtk.Box+BoxChild
 			this.sourceComboBox = global::Gtk.ComboBox.NewText ();
-			this.sourceComboBox.AppendText (global::Mono.Unix.Catalog.GetString ("Hulu"));
-			this.sourceComboBox.AppendText (global::Mono.Unix.Catalog.GetString ("Amazon"));
+			this.sourceComboBox.AppendText (global::Mono.Unix.Catalog.GetString ("Hulu\r"));
+			this.sourceComboBox.AppendText (global::Mono.Unix.Catalog.GetString ("Amazon\r"));
 			this.sourceComboBox.AppendText (global::Mono.Unix.Catalog.GetString ("YouTube"));
 			this.sourceComboBox.WidthRequest = 200;
 			this.sourceComboBox.Name = "sourceComboBox";
 			this.hbox3.Add (this.sourceComboBox);
-			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.sourceComboBox]));
-			w3.Position = 0;
-			w3.Expand = false;
-			w3.Fill = false;
+			global::Gtk.Box.BoxChild w2 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.sourceComboBox]));
+			w2.Position = 0;
+			w2.Expand = false;
+			w2.Fill = false;
 			// Container child hbox3.Gtk.Box+BoxChild
 			this.vbox2 = new global::Gtk.VBox ();
 			this.vbox2.Name = "vbox2";
@@ -91,10 +81,10 @@ namespace VideoAggregator
 			this.show.UseUnderline = true;
 			this.show.Group = new global::GLib.SList (global::System.IntPtr.Zero);
 			this.vbox2.Add (this.show);
-			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.show]));
-			w4.Position = 0;
-			w4.Expand = false;
-			w4.Fill = false;
+			global::Gtk.Box.BoxChild w3 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.show]));
+			w3.Position = 0;
+			w3.Expand = false;
+			w3.Fill = false;
 			// Container child vbox2.Gtk.Box+BoxChild
 			this.movie = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("movie"));
 			this.movie.CanFocus = true;
@@ -103,16 +93,16 @@ namespace VideoAggregator
 			this.movie.UseUnderline = true;
 			this.movie.Group = this.show.Group;
 			this.vbox2.Add (this.movie);
-			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.movie]));
-			w5.Position = 1;
-			w5.Expand = false;
-			w5.Fill = false;
+			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.movie]));
+			w4.Position = 1;
+			w4.Expand = false;
+			w4.Fill = false;
 			this.hbox3.Add (this.vbox2);
-			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.vbox2]));
-			w6.Position = 1;
+			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.hbox3 [this.vbox2]));
+			w5.Position = 1;
 			this.hbox1.Add (this.hbox3);
-			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.hbox3]));
-			w7.Position = 1;
+			global::Gtk.Box.BoxChild w6 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.hbox3]));
+			w6.Position = 1;
 			// Container child hbox1.Gtk.Box+BoxChild
 			this.hbox4 = new global::Gtk.HBox ();
 			this.hbox4.Name = "hbox4";
@@ -124,8 +114,8 @@ namespace VideoAggregator
 			this.searchEntry.IsEditable = true;
 			this.searchEntry.InvisibleChar = '●';
 			this.hbox4.Add (this.searchEntry);
-			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.searchEntry]));
-			w8.Position = 0;
+			global::Gtk.Box.BoxChild w7 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.searchEntry]));
+			w7.Position = 0;
 			// Container child hbox4.Gtk.Box+BoxChild
 			this.searchButton = new global::Gtk.Button ();
 			this.searchButton.CanFocus = true;
@@ -133,18 +123,18 @@ namespace VideoAggregator
 			this.searchButton.UseUnderline = true;
 			this.searchButton.Label = global::Mono.Unix.Catalog.GetString ("Search");
 			this.hbox4.Add (this.searchButton);
-			global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.searchButton]));
-			w9.Position = 1;
-			w9.Expand = false;
-			w9.Fill = false;
+			global::Gtk.Box.BoxChild w8 = ((global::Gtk.Box.BoxChild)(this.hbox4 [this.searchButton]));
+			w8.Position = 1;
+			w8.Expand = false;
+			w8.Fill = false;
 			this.hbox1.Add (this.hbox4);
-			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.hbox4]));
-			w10.Position = 2;
+			global::Gtk.Box.BoxChild w9 = ((global::Gtk.Box.BoxChild)(this.hbox1 [this.hbox4]));
+			w9.Position = 2;
 			this.container.Add (this.hbox1);
-			global::Gtk.Box.BoxChild w11 = ((global::Gtk.Box.BoxChild)(this.container [this.hbox1]));
-			w11.Position = 0;
-			w11.Expand = false;
-			w11.Fill = false;
+			global::Gtk.Box.BoxChild w10 = ((global::Gtk.Box.BoxChild)(this.container [this.hbox1]));
+			w10.Position = 0;
+			w10.Expand = false;
+			w10.Fill = false;
 			this.Add (this.container);
 			if ((this.Child != null)) {
 				this.Child.ShowAll ();
