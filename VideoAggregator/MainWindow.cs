@@ -7,7 +7,7 @@ namespace VideoAggregator
 	public partial class MainWindow: Gtk.Window
 	{
 		private Gtk.Widget embeddedWidget;
-		//private Stack<Gtk.Widget> previousWidgets;
+		private Stack<Gtk.Widget> previousWidgets;
 		public MainWindow () : base (Gtk.WindowType.Toplevel)
 		{
 			this.Build ();
@@ -15,6 +15,8 @@ namespace VideoAggregator
 			embeddedWidget = new ShowResultsWidget (this, shows);
 			this.container.Add (embeddedWidget);
 			this.ShowAll ();
+
+			previousWidgets = new Stack<Gtk.Widget> ();
 
 				
 		}
@@ -29,11 +31,11 @@ namespace VideoAggregator
 
 		public void showSelected(Show show){
 			this.container.Remove(embeddedWidget);
-			//previousWidgets.Push (new Gtk.Widget(embeddedWidget));
+
+			previousWidgets.Push (embeddedWidget);
 
 			show.numOfSeasons = GuideBoxAPIWrapper.getTVShowSeasons (show.id);
 			embeddedWidget = new SeasonResultsWidget (this, show);
-
 
 			this.container.Add (embeddedWidget);
 		}
@@ -41,7 +43,8 @@ namespace VideoAggregator
 
 		public void seasonSelected(Show show, int s){
 			this.container.Remove(embeddedWidget);
-			//previousWidgets.Push (new Gtk.Widget(embeddedWidget));
+
+			previousWidgets.Push (embeddedWidget);
 
 			Season season = new Season(s.ToString());
 			season.episodes = GuideBoxAPIWrapper.getTVShowEpisodes (show.id, s.ToString());
@@ -54,7 +57,8 @@ namespace VideoAggregator
 
 		public void episodeSelected(Episode episode){
 			this.container.Remove(embeddedWidget);
-			//previousWidgets.Push (new Gtk.Widget(embeddedWidget));
+
+			previousWidgets.Push (embeddedWidget);
 
 			Dictionary<string, List<string> > sources = GuideBoxAPIWrapper.getEpisodeLinks (episode.id);
 			embeddedWidget = new SourcesWidget (this, sources);
@@ -89,19 +93,20 @@ namespace VideoAggregator
 
 		protected void OnBackButtonClicked (object sender, EventArgs e)
 		{
-//			if (previousWidgets.Count != 0) {
-//				this.container.Remove (embeddedWidget);
-//
-//				embeddedWidget = previousWidgets.Pop ();
-//
-//				this.container.Add (embeddedWidget);
-//			}
+			if (previousWidgets.Count != 0) {
+				this.container.Remove (embeddedWidget);
+
+				embeddedWidget = previousWidgets.Pop ();
+
+				this.container.Add (embeddedWidget);
+			}
 		}
 
 		protected void OnSearchButtonClicked (object sender, EventArgs e)
 		{
 			this.container.Remove(embeddedWidget);
-			//previousWidgets.Push (new Gtk.Widget(embeddedWidget));
+
+			previousWidgets.Push (embeddedWidget);
 
 			string searchText = null;
 			searchText = searchEntry.Text;

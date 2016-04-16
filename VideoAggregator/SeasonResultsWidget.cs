@@ -25,15 +25,6 @@ namespace VideoAggregator
 			this.ShowAll ();
 		}
 
-		public SeasonResultsWidget (SeasonResultsWidget other)
-		{
-			this.Build ();
-			this.parent = other.parent;
-			this.show = other.show;
-			this.treeview = other.treeview;
-			this.ShowAll ();
-		}
-
 		protected void OnSeasonSelected (object o, Gtk.RowActivatedArgs args)
 		{
 			Gtk.TreeIter iter;

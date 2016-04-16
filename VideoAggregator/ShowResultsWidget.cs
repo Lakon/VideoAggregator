@@ -29,14 +29,6 @@ namespace VideoAggregator
 			this.ShowAll ();
 		}
 
-		public ShowResultsWidget (ShowResultsWidget other)
-		{
-			this.Build ();
-			this.parent = other.parent;
-			this.treeview = other.treeview;
-			this.ShowAll ();
-		}
-
 		protected void OnShowSelected (object o, Gtk.RowActivatedArgs args)
 		{
 			Gtk.TreeIter iter;
