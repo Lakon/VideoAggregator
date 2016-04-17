@@ -33,21 +33,26 @@ namespace VideoAggregator{
 
 		private static string getAPIData(string url){
 			string text = "";
-			int timeout = 0;
+			bool gotResult = false;
 			int counter = 0;
 
-			while (timeout == 0){
-			HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
-			HttpWebResponse response = (HttpWebResponse) request.GetResponse();
+			while (!gotResult){
+				Console.WriteLine ("Web request " + counter.ToString());
+				HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
+				HttpWebResponse response = (HttpWebResponse) request.GetResponse();
 				if (response.StatusCode == HttpStatusCode.OK && response.ContentLength > 0) {
 					TextReader reader = new StreamReader (response.GetResponseStream ());
 					text = reader.ReadToEnd ();
-					if (text != null ||  counter == 5) {
-						timeout = 1;
-					}
-					counter++;
+					reader.Close ();
+					if (text != null)
+						gotResult = true;
+					else
+						counter++;
 				}
-				}
+				response.Close ();
+				if (counter >= 5)
+					throw new WebException ("Server response timed out");
+			}
 
 			//File.WriteAllText (fileName, text);
 			//Console.WriteLine (url);
