@@ -160,7 +160,7 @@ namespace VideoAggregator
 
 		protected void OnSearchButtonClicked (object sender, EventArgs e)
 		{
-			string searchText = searchEntry.Text;
+			string searchText = searchEntry.Text.Trim();
 
 			if (searchText != null && searchText != "") {
 				clearContainer ();

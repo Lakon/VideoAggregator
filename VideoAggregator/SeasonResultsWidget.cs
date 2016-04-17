@@ -23,6 +23,7 @@ namespace VideoAggregator
 
 			this.treeview.Model = seasonListStore;
 			this.ShowAll ();
+			Console.WriteLine ("SeasonResultsWindow Created");
 		}
 
 		protected void OnSeasonSelected (object o, Gtk.RowActivatedArgs args)

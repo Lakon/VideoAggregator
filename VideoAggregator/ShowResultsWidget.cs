@@ -27,6 +27,7 @@ namespace VideoAggregator
 			
 			this.treeview.Model = showListStore;
 			this.ShowAll ();
+			Console.WriteLine ("ShowResultsWindow Created");
 		}
 
 		protected void OnShowSelected (object o, Gtk.RowActivatedArgs args)

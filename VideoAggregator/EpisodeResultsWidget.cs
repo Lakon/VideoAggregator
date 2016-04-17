@@ -23,6 +23,7 @@ namespace VideoAggregator
 
 			this.treeview.Model = episodeListStore;
 			this.ShowAll ();
+			Console.WriteLine ("EpisodeResultsWindow Created");
 		}
 
 		protected void OnEpisodeSelected (object o, Gtk.RowActivatedArgs args)
