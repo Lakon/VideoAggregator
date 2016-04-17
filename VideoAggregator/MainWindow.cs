@@ -10,6 +10,24 @@ namespace VideoAggregator
 		private Gtk.Widget embeddedWidget;
 		private Stack<Gtk.Widget> previousWidgets;
 		private Gtk.Label errorLabel;
+
+		private Source activeSource {
+			get {
+				switch (this.sourceComboBox.Active) {
+				case 0:
+					return Source.All;
+				case 1:
+					return Source.Hulu;
+				case 2:
+					return Source.Amazon;
+				case 3:
+					return Source.YouTube;
+				default:
+					return Source.All;
+				}
+			}
+		}
+
 		public MainWindow () : base (Gtk.WindowType.Toplevel)
 		{
 			this.Build ();
@@ -151,7 +169,19 @@ namespace VideoAggregator
 					outputError (exception.Message);
 				}
 			}
+		}
 
+		protected void OnPopButtonClicked (object sender, EventArgs e)
+		{
+			clearContainer ();
+			try{
+				List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (0, 25, activeSource);
+				embeddedWidget = new ShowResultsWidget (this, shows);
+				this.container.Add (embeddedWidget);
+
+			}catch(WebException exception){
+				outputError (exception.Message);
+			}
 		}
 	}
 }

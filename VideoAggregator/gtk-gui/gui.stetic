@@ -45,10 +45,13 @@
                   <widget class="Gtk.ComboBox" id="sourceComboBox">
                     <property name="MemberName" />
                     <property name="WidthRequest">200</property>
+                    <property name="Tooltip" translatable="yes">Sources</property>
                     <property name="IsTextCombo">True</property>
-                    <property name="Items" translatable="yes">Hulu
+                    <property name="Items" translatable="yes">All
+Hulu
 Amazon
 YouTube</property>
+                    <property name="Active">0</property>
                   </widget>
                   <packing>
                     <property name="Position">0</property>
@@ -109,6 +112,23 @@ YouTube</property>
               </packing>
             </child>
             <child>
+              <widget class="Gtk.Button" id="popularButton">
+                <property name="MemberName" />
+                <property name="Tooltip" translatable="yes">Get most popular shows from the active source</property>
+                <property name="CanFocus">True</property>
+                <property name="Type">TextOnly</property>
+                <property name="Label" translatable="yes">Popular</property>
+                <property name="UseUnderline">True</property>
+                <signal name="Clicked" handler="OnPopButtonClicked" />
+              </widget>
+              <packing>
+                <property name="Position">2</property>
+                <property name="AutoSize">True</property>
+                <property name="Expand">False</property>
+                <property name="Fill">False</property>
+              </packing>
+            </child>
+            <child>
               <widget class="Gtk.HBox" id="hbox4">
                 <property name="MemberName" />
                 <property name="Spacing">6</property>
@@ -142,7 +162,7 @@ YouTube</property>
                 </child>
               </widget>
               <packing>
-                <property name="Position">2</property>
+                <property name="Position">3</property>
                 <property name="AutoSize">True</property>
               </packing>
             </child>
