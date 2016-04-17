@@ -1,6 +1,7 @@
 ﻿using System;
 using Gtk;
 using System.Collections.Generic;
+using System.Net;
 
 namespace VideoAggregator
 {
@@ -8,62 +9,92 @@ namespace VideoAggregator
 	{
 		private Gtk.Widget embeddedWidget;
 		private Stack<Gtk.Widget> previousWidgets;
+		private Gtk.Label errorLabel;
 		public MainWindow () : base (Gtk.WindowType.Toplevel)
 		{
 			this.Build ();
-			List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (0, 25, Source.All);
-			embeddedWidget = new ShowResultsWidget (this, shows);
-			this.container.Add (embeddedWidget);
-			this.ShowAll ();
-
 			previousWidgets = new Stack<Gtk.Widget> ();
+			errorLabel = new Gtk.Label ();
+			try{
+				List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (0, 25, Source.All);
+				embeddedWidget = new ShowResultsWidget (this, shows);
+				this.container.Add (embeddedWidget);
 
-				
+			}catch(WebException e){
+				outputError (e.Message);
+			}
+
+			this.ShowAll ();
 		}
 
-		protected void OnDeleteEvent (object sender, DeleteEventArgs a)
-		{
 
+
+		//clears whatever is in the lower part of the container
+		//if it's the embeddedWidget then it pushes it to stack
+		private void clearContainer(){
+			if (container.Children.Length == 2) {
+				if (container.Children [1] == embeddedWidget) {
+					previousWidgets.Push (embeddedWidget);
+				}
+				container.Remove (container.Children [1]);
+			} else if (container.Children.Length > 2) {
+				Console.WriteLine ("Somethings wrong");
+			}
+		}
+
+		//puts a label with error message in container
+		public void outputError(string errorMessage){
+			clearContainer ();
+
+			errorLabel.Text = errorMessage;
+			this.container.Add (errorLabel);
+			this.ShowAll ();
+		}
+
+		protected void OnDeleteEvent (object sender, DeleteEventArgs a){
 			Application.Quit ();
 			a.RetVal = true;
 		}
 
-
 		public void showSelected(Show show){
-			this.container.Remove(embeddedWidget);
+			clearContainer ();
+			try{
+				show.numOfSeasons = GuideBoxAPIWrapper.getTVShowSeasons (show.id);
+				embeddedWidget = new SeasonResultsWidget (this, show);
+				this.container.Add (embeddedWidget);
 
-			previousWidgets.Push (embeddedWidget);
-
-			show.numOfSeasons = GuideBoxAPIWrapper.getTVShowSeasons (show.id);
-			embeddedWidget = new SeasonResultsWidget (this, show);
-
-			this.container.Add (embeddedWidget);
+			}catch(WebException e){
+				outputError (e.Message);
+			}
 		}
 
 
 		public void seasonSelected(Show show, int s){
-			this.container.Remove(embeddedWidget);
+			clearContainer ();
+			try{
+				Season season = new Season(s.ToString());
+				season.episodes = GuideBoxAPIWrapper.getTVShowEpisodes (show.id, s.ToString());
+				embeddedWidget = new EpisodeResultsWidget (this, season);
 
-			previousWidgets.Push (embeddedWidget);
+				this.container.Add (embeddedWidget);
 
-			Season season = new Season(s.ToString());
-			season.episodes = GuideBoxAPIWrapper.getTVShowEpisodes (show.id, s.ToString());
-			embeddedWidget = new EpisodeResultsWidget (this, season);
-
-
-			this.container.Add (embeddedWidget);
+			}catch(WebException e){
+				outputError (e.Message);
+			}
 		}
 
 
 		public void episodeSelected(Episode episode){
-			this.container.Remove(embeddedWidget);
+			clearContainer ();
+			try{
+				Dictionary<string, List<string> > sources = GuideBoxAPIWrapper.getEpisodeLinks (episode.id);
+				embeddedWidget = new SourcesWidget (this, sources);
 
-			previousWidgets.Push (embeddedWidget);
+				this.container.Add (embeddedWidget);
 
-			Dictionary<string, List<string> > sources = GuideBoxAPIWrapper.getEpisodeLinks (episode.id);
-			embeddedWidget = new SourcesWidget (this, sources);
-
-			this.container.Add (embeddedWidget);
+			}catch(WebException e){
+				outputError (e.Message);
+			}
 		}
 
 		public void sourceSelected(string source, List<string> urls){
@@ -94,37 +125,32 @@ namespace VideoAggregator
 		protected void OnBackButtonClicked (object sender, EventArgs e)
 		{
 			if (previousWidgets.Count != 0) {
-				this.container.Remove (embeddedWidget);
+				if (container.Children.Length == 2)
+					container.Remove (container.Children[1]);
 
 				embeddedWidget = previousWidgets.Pop ();
 
-				this.container.Add (embeddedWidget);
+				container.Add (embeddedWidget);
 			}
 		}
 
+
+
 		protected void OnSearchButtonClicked (object sender, EventArgs e)
 		{
-			this.container.Remove(embeddedWidget);
+			string searchText = searchEntry.Text;
 
-			previousWidgets.Push (embeddedWidget);
+			if (searchText != null && searchText != "") {
+				clearContainer ();
+				try{
+					List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (searchText);
+					embeddedWidget = new ShowResultsWidget (this, shows);
+					this.container.Add (embeddedWidget);
 
-			string searchText = null;
-			searchText = searchEntry.Text;
-
-			//if (searchText != null) {
-				List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (searchText);
-				embeddedWidget = new ShowResultsWidget (this, shows);
-				this.container.Add (embeddedWidget);
-
-			//} else 
-			//{
-			//	this.Build ();
-			//	List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (0, 25, Source.All);
-			//	embeddedWidget = new ShowResultsWidget (this, shows);
-			//	this.container.Add (embeddedWidget);
-			//	this.ShowAll ();
-
-			//}
+				}catch(WebException exception){
+					outputError (exception.Message);
+				}
+			}
 
 		}
 	}
