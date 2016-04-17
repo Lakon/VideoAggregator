@@ -117,23 +117,15 @@ namespace VideoAggregator
 		}
 
 		public void sourceSelected(string source, List<string> urls){
-
-			int counter = 0;
 			Console.WriteLine (source);
 			foreach (string url in urls) {
 				Console.WriteLine (url);
-				counter++;
 			}
 
-			string platform = urls [0];
-
-			int areEqual = 'h'.CompareTo(platform[11]);
-			int areEqual2 = 'h'.CompareTo(platform[12]);
-
-			if (areEqual == 0 || areEqual == 32 || areEqual2 == 0 || areEqual2 == 32) {
-				System.Diagnostics.Process.Start ("/Applications/Firefox.app/Contents/MacOS/Firefox", urls [counter - 1]);} 
+			if (source == "Hulu") {
+				System.Diagnostics.Process.Start ("/Applications/Firefox.app/Contents/MacOS/Firefox", urls [0]);} 
 			else {
-				System.Diagnostics.Process.Start ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", urls [counter - 1]);}
+				System.Diagnostics.Process.Start ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", urls [0]);}
 		}
 
 		protected void OnDeleteEvent (object sender, DeleteEventArgs a){
