@@ -47,11 +47,10 @@ namespace VideoAggregator{
 					if (text != null)
 						gotResult = true;
 				}
-				else
-					counter++;
+				counter++;
 				
 				response.Close ();
-				if (counter >= 5)
+				if (counter >= 5 && !gotResult)
 					throw new WebException ("Server response timed out");
 			}
 
