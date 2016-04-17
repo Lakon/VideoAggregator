@@ -46,15 +46,15 @@ namespace VideoAggregator{
 					reader.Close ();
 					if (text != null)
 						gotResult = true;
-					else
-						counter++;
 				}
+				else
+					counter++;
+				
 				response.Close ();
 				if (counter >= 5)
 					throw new WebException ("Server response timed out");
 			}
 
-			//File.WriteAllText (fileName, text);
 			//Console.WriteLine (url);
 			return text;
 		}
