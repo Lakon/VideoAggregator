@@ -184,7 +184,7 @@ namespace VideoAggregator{
 			foreach (var result in results){
 				var definition = new {title = "", id = "", poster_240x342 = ""};
 				var show_json = JsonConvert.DeserializeAnonymousType(result.ToString(), definition);
-				Show show = new Show (show_json.title, show_json.id);
+				Show show = new Show (show_json.title, show_json.id, true);
 				show.thumbURL = show_json.poster_240x342;
 
 				//result = image.thumbURL;  *******
@@ -205,7 +205,7 @@ namespace VideoAggregator{
 			foreach (var result in results){
 				var definition = new {title = "", id = "", poster_240x342 = ""};
 				var show_json = JsonConvert.DeserializeAnonymousType(result.ToString(), definition);
-				Show show = new Show (show_json.title, show_json.id);
+				Show show = new Show (show_json.title, show_json.id, true);
 				show.thumbURL = show_json.poster_240x342;
 				shows.Add(show);
 			}

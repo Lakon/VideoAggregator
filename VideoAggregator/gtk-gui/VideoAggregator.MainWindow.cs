@@ -16,9 +16,9 @@ namespace VideoAggregator
 		
 		private global::Gtk.VBox vbox2;
 		
-		private global::Gtk.RadioButton show;
+		private global::Gtk.RadioButton showRadioButton;
 		
-		private global::Gtk.RadioButton movie;
+		private global::Gtk.RadioButton movieRadioButton;
 		
 		private global::Gtk.Button popularButton;
 		
@@ -80,26 +80,26 @@ namespace VideoAggregator
 			this.vbox2.Name = "vbox2";
 			this.vbox2.Spacing = 6;
 			// Container child vbox2.Gtk.Box+BoxChild
-			this.show = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("show"));
-			this.show.CanFocus = true;
-			this.show.Name = "show";
-			this.show.DrawIndicator = true;
-			this.show.UseUnderline = true;
-			this.show.Group = new global::GLib.SList (global::System.IntPtr.Zero);
-			this.vbox2.Add (this.show);
-			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.show]));
+			this.showRadioButton = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Show"));
+			this.showRadioButton.CanFocus = true;
+			this.showRadioButton.Name = "showRadioButton";
+			this.showRadioButton.DrawIndicator = true;
+			this.showRadioButton.UseUnderline = true;
+			this.showRadioButton.Group = new global::GLib.SList (global::System.IntPtr.Zero);
+			this.vbox2.Add (this.showRadioButton);
+			global::Gtk.Box.BoxChild w4 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.showRadioButton]));
 			w4.Position = 0;
 			w4.Expand = false;
 			w4.Fill = false;
 			// Container child vbox2.Gtk.Box+BoxChild
-			this.movie = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("movie"));
-			this.movie.CanFocus = true;
-			this.movie.Name = "movie";
-			this.movie.DrawIndicator = true;
-			this.movie.UseUnderline = true;
-			this.movie.Group = this.show.Group;
-			this.vbox2.Add (this.movie);
-			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.movie]));
+			this.movieRadioButton = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Movie"));
+			this.movieRadioButton.CanFocus = true;
+			this.movieRadioButton.Name = "movieRadioButton";
+			this.movieRadioButton.DrawIndicator = true;
+			this.movieRadioButton.UseUnderline = true;
+			this.movieRadioButton.Group = this.showRadioButton.Group;
+			this.vbox2.Add (this.movieRadioButton);
+			global::Gtk.Box.BoxChild w5 = ((global::Gtk.Box.BoxChild)(this.vbox2 [this.movieRadioButton]));
 			w5.Position = 1;
 			w5.Expand = false;
 			w5.Fill = false;

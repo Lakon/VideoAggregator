@@ -71,8 +71,15 @@ namespace VideoAggregator
 		public void showSelected(Show show){
 			clearContainer ();
 			try{
-				show.numOfSeasons = GuideBoxAPIWrapper.getTVShowSeasons (show.id);
-				embeddedWidget = new SeasonResultsWidget (this, show);
+				if (show.isMovie){
+					Dictionary<string, List<string> > sources = GuideBoxAPIWrapper.getMovieLinks (show.id);
+					embeddedWidget = new SourcesWidget (this, sources);
+				}
+				else{
+					show.numOfSeasons = GuideBoxAPIWrapper.getTVShowSeasons (show.id);
+					embeddedWidget = new SeasonResultsWidget (this, show);
+				}
+
 				this.container.Add (embeddedWidget);
 
 			}catch(WebException e){
@@ -158,8 +165,15 @@ namespace VideoAggregator
 			if (searchText != null && searchText != "") {
 				clearContainer ();
 				try{
-					List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (searchText);
-					embeddedWidget = new ShowResultsWidget (this, shows);
+					if (showRadioButton.Active){
+						List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (searchText);
+						embeddedWidget = new ShowResultsWidget (this, shows);
+					}
+					else{
+						List<Show> shows = GuideBoxAPIWrapper.getMovieIds (searchText);
+						embeddedWidget = new ShowResultsWidget (this, shows);
+					}
+
 					this.container.Add (embeddedWidget);
 
 				}catch(WebException exception){
@@ -172,8 +186,15 @@ namespace VideoAggregator
 		{
 			clearContainer ();
 			try{
-				List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (0, 25, activeSource);
-				embeddedWidget = new ShowResultsWidget (this, shows);
+				if (showRadioButton.Active){
+					List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (0, 25, activeSource);
+					embeddedWidget = new ShowResultsWidget (this, shows);
+				}
+				else{
+					List<Show> shows = GuideBoxAPIWrapper.getMovieIds (0, 25, activeSource);
+					embeddedWidget = new ShowResultsWidget (this, shows);
+				}
+
 				this.container.Add (embeddedWidget);
 
 			}catch(WebException exception){

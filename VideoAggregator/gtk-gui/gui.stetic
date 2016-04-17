@@ -65,15 +65,15 @@ YouTube</property>
                     <property name="MemberName" />
                     <property name="Spacing">6</property>
                     <child>
-                      <widget class="Gtk.RadioButton" id="show">
+                      <widget class="Gtk.RadioButton" id="showRadioButton">
                         <property name="MemberName" />
                         <property name="CanFocus">True</property>
-                        <property name="Label" translatable="yes">show</property>
+                        <property name="Label" translatable="yes">Show</property>
                         <property name="Active">True</property>
                         <property name="DrawIndicator">True</property>
                         <property name="HasLabel">True</property>
                         <property name="UseUnderline">True</property>
-                        <property name="Group">group1</property>
+                        <property name="Group">showTypeGroup</property>
                       </widget>
                       <packing>
                         <property name="Position">0</property>
@@ -83,14 +83,14 @@ YouTube</property>
                       </packing>
                     </child>
                     <child>
-                      <widget class="Gtk.RadioButton" id="movie">
+                      <widget class="Gtk.RadioButton" id="movieRadioButton">
                         <property name="MemberName" />
                         <property name="CanFocus">True</property>
-                        <property name="Label" translatable="yes">movie</property>
+                        <property name="Label" translatable="yes">Movie</property>
                         <property name="DrawIndicator">True</property>
                         <property name="HasLabel">True</property>
                         <property name="UseUnderline">True</property>
-                        <property name="Group">group1</property>
+                        <property name="Group">showTypeGroup</property>
                       </widget>
                       <packing>
                         <property name="Position">1</property>
