@@ -60,13 +60,11 @@ namespace VideoAggregator{
 
 		public static List<Show> getTVShowIds(int limit1, int limit2, Source source){
 			string url = apiBaseURL + "shows/all/" + limit1.ToString() + "/" + limit2.ToString() + "/" + SourceToString(source) + "/web";
-			//string fileName = "getTVShowIds_0_25_all.txt";
-			//string JsonData = getAPIData (url, fileName);
-			//string JsonData = File.ReadAllText(fileName);
+
 			JObject search = new JObject();
 
-				string JsonData = getAPIData (url);
-				search = JObject.Parse (JsonData);
+			string JsonData = getAPIData (url);
+			search = JObject.Parse (JsonData);
 
 			List<JToken> results = search["results"].Children().ToList();
 			List<Show> shows = new List<Show>();
@@ -83,14 +81,13 @@ namespace VideoAggregator{
 		}
 
 		public static List<Show> getTVShowIds(string title){
+			//they want it triple url encoded
 			string url = apiBaseURL + "search/title/" + WebUtility.UrlEncode(WebUtility.UrlEncode(WebUtility.UrlEncode(title))) + "/fuzzy";
-			//string fileName = "powers_search.txt";
-			//string JsonData = getAPIData (url, fileName);
-			//string JsonData = File.ReadAllText(fileName);
+
 			JObject search = new JObject();
 
-				string JsonData = getAPIData (url);
-				search = JObject.Parse (JsonData);
+			string JsonData = getAPIData (url);
+			search = JObject.Parse (JsonData);
 
 			List<JToken> results = search["results"].Children().ToList();
 			List<Show> shows = new List<Show>();
@@ -106,39 +103,33 @@ namespace VideoAggregator{
 
 		public static int getTVShowSeasons(string id){
 			string url = apiBaseURL + "show/" + id + "/seasons";
-			//string fileName = "daredevil_25147_numofseasons.txt";
-			//string JsonData = getAPIData (url, fileName);
-			//string JsonData = File.ReadAllText(fileName);
+
 			JObject search = new JObject();
 
-				string JsonData = getAPIData (url);
-				search = JObject.Parse (JsonData);
+			string JsonData = getAPIData (url);
+			search = JObject.Parse (JsonData);
 
 			return (int)search ["total_results"];
 		}
 
 		public static List<Episode> getTVShowEpisodes(string id, string season){
 			string url = apiBaseURL + "show/" + id + "/episodes/" + season + "/0/100/" + SourceToString(Source.All) + "/web/?reverse_ordering=true";
-			//string fileName = "daredevil_25147_season1.txt";
-			//string JsonData = getAPIData (url, fileName);
-			//string JsonData = File.ReadAllText(fileName);
 			JObject search = new JObject();
 
-				string JsonData = getAPIData (url);
-				search = JObject.Parse (JsonData);
+			string JsonData = getAPIData (url);
+			search = JObject.Parse (JsonData);
 
 			List<Episode> episodes = new List<Episode> ();
+			List<JToken> results = search ["results"].Children ().ToList ();
 
+			foreach (var result in results) {
+				var definition = new {title = "", id = "", overview = "", episode_number = "", thumbnail_304x171 = ""};
+				var episode_json = JsonConvert.DeserializeAnonymousType (result.ToString (), definition);
+				Episode episode = new Episode (season, episode_json.episode_number, episode_json.title, episode_json.id);
+				episode.desc = episode_json.overview;
+				episode.thumbURL = episode_json.thumbnail_304x171;
 
-				List<JToken> results = search ["results"].Children ().ToList ();
-
-				foreach (var result in results) {
-					var definition = new {title = "", id = "", overview = "", episode_number = "", thumbnail_304x171 = ""};
-					var episode_json = JsonConvert.DeserializeAnonymousType (result.ToString (), definition);
-					Episode episode = new Episode (season, episode_json.episode_number, episode_json.title, episode_json.id);
-					episode.desc = episode_json.overview;
-					episode.thumbURL = episode_json.thumbnail_304x171;
-					episodes.Add (episode);
+				episodes.Add (episode);
 
 			}
 			return episodes;
@@ -146,86 +137,47 @@ namespace VideoAggregator{
 
 		public static Dictionary<string, List<string> > getEpisodeLinks(string id){
 			string url = apiBaseURL + "episode/" + id;
-			//string fileName = "daredevil_25147_season1_ep1_links.txt";
-			//string JsonData = getAPIData (url, fileName);
-			//string JsonData = File.ReadAllText(fileName);
 
 			string JsonData = getAPIData (url);
 			JObject json_ep = JObject.Parse(JsonData);
 
-			List<JToken> freeWebSources = json_ep["free_web_sources"].Children().ToList();
-			List<JToken> tvEverywhereWebSources = json_ep["tv_everywhere_web_sources"].Children().ToList();
-			List<JToken> subscriptionWebSources = json_ep["subscription_web_sources"].Children().ToList();
-			List<JToken> purchaseWebSources = json_ep["purchase_web_sources"].Children().ToList();
-			Dictionary<string, List<string> > sources = new Dictionary<string, List<string> >();
+			List< List<JToken> > sources = new List< List<JToken> >();
+			sources.Add (json_ep["free_web_sources"].Children().ToList());
+			sources.Add (json_ep["tv_everywhere_web_sources"].Children().ToList());
+			sources.Add (json_ep["subscription_web_sources"].Children().ToList());
+			sources.Add (json_ep["purchase_web_sources"].Children().ToList());
 
-			foreach (var source in freeWebSources){
-				var definition = new {source = "", id = "", display_name = "", link = ""};
-				var source_json = JsonConvert.DeserializeAnonymousType(source.ToString(), definition);
-				if (source_json.display_name == "Hulu" || source_json.display_name == "Amazon" ||
-					source_json.display_name == "Amazon Prime" || source_json.display_name == "YouTube") {
+			Dictionary<string, List<string> > sourceLinks = new Dictionary<string, List<string> >();
 
-					if (sources.ContainsKey (source_json.display_name)) {
-						sources [source_json.display_name].Add (source_json.link);
-					} else {
-						sources.Add (source_json.display_name, new List<string>{source_json.link});
+			foreach (var sourceList in sources){
+				foreach (var source in sourceList){
+					var definition = new {source = "", id = "", display_name = "", link = ""};
+					var source_json = JsonConvert.DeserializeAnonymousType(source.ToString(), definition);
+					string sourceName = source_json.display_name;
+
+					if (sourceName == "Amazon Prime")
+						sourceName = "Amazon";
+					
+					if (sourceName == "Hulu" || sourceName == "Amazon" || sourceName == "YouTube") {
+						
+						if (sourceLinks.ContainsKey (sourceName)) {
+							sourceLinks [sourceName].Add (source_json.link);
+						} else {
+							sourceLinks.Add (sourceName, new List<string>{source_json.link});
+						}
 					}
 				}
 			}
-
-			foreach (var source in tvEverywhereWebSources){
-				var definition = new {source = "", id = "", display_name = "", link = ""};
-				var source_json = JsonConvert.DeserializeAnonymousType(source.ToString(), definition);
-				if (source_json.display_name == "Hulu" || source_json.display_name == "Amazon" ||
-					source_json.display_name == "Amazon Prime" || source_json.display_name == "YouTube") {
-
-					if (sources.ContainsKey (source_json.display_name)) {
-						sources [source_json.display_name].Add (source_json.link);
-					} else {
-						sources.Add (source_json.display_name, new List<string>{source_json.link});
-					}
-				}
-			}
-
-			foreach (var source in subscriptionWebSources){
-				var definition = new {source = "", id = "", display_name = "", link = ""};
-				var source_json = JsonConvert.DeserializeAnonymousType(source.ToString(), definition);
-				if (source_json.display_name == "Hulu" || source_json.display_name == "Amazon" ||
-					source_json.display_name == "Amazon Prime" || source_json.display_name == "YouTube") {
-
-					if (sources.ContainsKey (source_json.display_name)) {
-						sources [source_json.display_name].Add (source_json.link);
-					} else {
-						sources.Add (source_json.display_name, new List<string>{source_json.link});
-					}
-				}
-			}
-
-			foreach (var source in purchaseWebSources){
-				var definition = new {source = "", id = "", display_name = "", link = ""};
-				var source_json = JsonConvert.DeserializeAnonymousType(source.ToString(), definition);
-				if (source_json.display_name == "Hulu" || source_json.display_name == "Amazon" ||
-					source_json.display_name == "Amazon Prime" || source_json.display_name == "YouTube") {
-
-					if (sources.ContainsKey (source_json.display_name)) {
-						sources [source_json.display_name].Add (source_json.link);
-					} else {
-						sources.Add (source_json.display_name, new List<string>{source_json.link});
-					}
-				}
-			}
-			return sources;
+			return sourceLinks;
 		}
 
 		public static List<Show> getMovieIds(int limit1, int limit2, Source source){
 			string url = apiBaseURL + "movies/all/" + limit1.ToString() + "/" + limit2.ToString() + "/" + SourceToString(source) + "/web";
-			//string fileName = "getMovieIds_0_25_all.txt";
-			//string JsonData = getAPIData (url, fileName);
-			//string JsonData = File.ReadAllText(fileName);
+
 			JObject search = new JObject();
 
-				string JsonData = getAPIData (url);
-				search = JObject.Parse (JsonData);
+			string JsonData = getAPIData (url);
+			search = JObject.Parse (JsonData);
 
 			List<JToken> results = search["results"].Children().ToList();
 			List<Show> shows = new List<Show>();
@@ -243,13 +195,10 @@ namespace VideoAggregator{
 
 		public static List<Show> getMovieIds(string title){
 			string url = apiBaseURL + "search/movie/title/" + WebUtility.UrlEncode(WebUtility.UrlEncode(WebUtility.UrlEncode(title))) + "/fuzzy";
-			//string fileName = "big_lebowski_search.txt";
-			//string JsonData = getAPIData (url, fileName);
-			//string JsonData = File.ReadAllText(fileName);
 			JObject search = new JObject();
 
-				string JsonData = getAPIData (url);
-				search = JObject.Parse (JsonData);
+			string JsonData = getAPIData (url);
+			search = JObject.Parse (JsonData);
 
 			List<JToken> results = search["results"].Children().ToList();
 			List<Show> shows = new List<Show>();
@@ -265,75 +214,38 @@ namespace VideoAggregator{
 
 		public static Dictionary<string, List<string> > getMovieLinks(string id){
 			string url = apiBaseURL + "movie/" + id;
-			//string fileName = "big_lebowski_links.txt";
-			//string JsonData = getAPIData (url, fileName);
-			//string JsonData = File.ReadAllText(fileName);
 
 			string JsonData = getAPIData (url);
 			JObject json_ep = JObject.Parse(JsonData);
 
-			List<JToken> freeWebSources = json_ep["free_web_sources"].Children().ToList();
-			List<JToken> tvEverywhereWebSources = json_ep["tv_everywhere_web_sources"].Children().ToList();
-			List<JToken> subscriptionWebSources = json_ep["subscription_web_sources"].Children().ToList();
-			List<JToken> purchaseWebSources = json_ep["purchase_web_sources"].Children().ToList();
-			Dictionary<string, List<string> > sources = new Dictionary<string, List<string> >();
+			List< List<JToken> > sources = new List< List<JToken> >();
+			sources.Add (json_ep["free_web_sources"].Children().ToList());
+			sources.Add (json_ep["tv_everywhere_web_sources"].Children().ToList());
+			sources.Add (json_ep["subscription_web_sources"].Children().ToList());
+			sources.Add (json_ep["purchase_web_sources"].Children().ToList());
 
-			foreach (var source in freeWebSources){
-				var definition = new {source = "", id = "", display_name = "", link = ""};
-				var source_json = JsonConvert.DeserializeAnonymousType(source.ToString(), definition);
-				if (source_json.display_name == "Hulu" || source_json.display_name == "Amazon" ||
-					source_json.display_name == "Amazon Prime" || source_json.display_name == "YouTube") {
+			Dictionary<string, List<string> > sourceLinks = new Dictionary<string, List<string> >();
 
-					if (sources.ContainsKey (source_json.display_name)) {
-						sources [source_json.display_name].Add (source_json.link);
-					} else {
-						sources.Add (source_json.display_name, new List<string>{source_json.link});
+			foreach (var sourceList in sources){
+				foreach (var source in sourceList){
+					var definition = new {source = "", id = "", display_name = "", link = ""};
+					var source_json = JsonConvert.DeserializeAnonymousType(source.ToString(), definition);
+					string sourceName = source_json.display_name;
+
+					if (sourceName == "Amazon Prime")
+						sourceName = "Amazon";
+
+					if (sourceName == "Hulu" || sourceName == "Amazon" || sourceName == "YouTube") {
+
+						if (sourceLinks.ContainsKey (sourceName)) {
+							sourceLinks [sourceName].Add (source_json.link);
+						} else {
+							sourceLinks.Add (sourceName, new List<string>{source_json.link});
+						}
 					}
 				}
 			}
-
-			foreach (var source in tvEverywhereWebSources){
-				var definition = new {source = "", id = "", display_name = "", link = ""};
-				var source_json = JsonConvert.DeserializeAnonymousType(source.ToString(), definition);
-				if (source_json.display_name == "Hulu" || source_json.display_name == "Amazon" ||
-					source_json.display_name == "Amazon Prime" || source_json.display_name == "YouTube") {
-
-					if (sources.ContainsKey (source_json.display_name)) {
-						sources [source_json.display_name].Add (source_json.link);
-					} else {
-						sources.Add (source_json.display_name, new List<string>{source_json.link});
-					}
-				}
-			}
-
-			foreach (var source in subscriptionWebSources){
-				var definition = new {source = "", id = "", display_name = "", link = ""};
-				var source_json = JsonConvert.DeserializeAnonymousType(source.ToString(), definition);
-				if (source_json.display_name == "Hulu" || source_json.display_name == "Amazon" ||
-					source_json.display_name == "Amazon Prime" || source_json.display_name == "YouTube") {
-
-					if (sources.ContainsKey (source_json.display_name)) {
-						sources [source_json.display_name].Add (source_json.link);
-					} else {
-						sources.Add (source_json.display_name, new List<string>{source_json.link});
-					}
-				}
-			}
-
-			foreach (var source in purchaseWebSources){
-				var definition = new {source = "", id = "", display_name = "", link = ""};
-				var source_json = JsonConvert.DeserializeAnonymousType(source.ToString(), definition);
-				if (source_json.display_name == "Hulu" || source_json.display_name == "Amazon" ||
-					source_json.display_name == "Amazon Prime" || source_json.display_name == "YouTube") {
-
-					if (sources.ContainsKey (source_json.display_name)) {
-						sources [source_json.display_name].Add (source_json.link);
-					} else {
-						sources.Add (source_json.display_name, new List<string>{source_json.link});
-					}
-				}
-			}
-			return sources;
+			return sourceLinks;
 		}
 	}
 }

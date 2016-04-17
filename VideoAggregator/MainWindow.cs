@@ -44,8 +44,7 @@ namespace VideoAggregator
 
 			this.ShowAll ();
 		}
-
-
+			
 
 		//clears whatever is in the lower part of the container
 		//if it's the embeddedWidget then it pushes it to stack
@@ -67,11 +66,6 @@ namespace VideoAggregator
 			errorLabel.Text = errorMessage;
 			this.container.Add (errorLabel);
 			this.ShowAll ();
-		}
-
-		protected void OnDeleteEvent (object sender, DeleteEventArgs a){
-			Application.Quit ();
-			a.RetVal = true;
 		}
 
 		public void showSelected(Show show){
@@ -140,6 +134,11 @@ namespace VideoAggregator
 			}
 		}
 
+		protected void OnDeleteEvent (object sender, DeleteEventArgs a){
+			Application.Quit ();
+			a.RetVal = true;
+		}
+
 		protected void OnBackButtonClicked (object sender, EventArgs e)
 		{
 			if (previousWidgets.Count != 0) {
@@ -151,8 +150,6 @@ namespace VideoAggregator
 				container.Add (embeddedWidget);
 			}
 		}
-
-
 
 		protected void OnSearchButtonClicked (object sender, EventArgs e)
 		{
