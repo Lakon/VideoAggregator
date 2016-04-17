@@ -124,21 +124,16 @@ namespace VideoAggregator
 				Console.WriteLine (url);
 				counter++;
 			}
-			switch(counter)
-			{
-			case 1:
 
-				System.Diagnostics.Process.Start ("/Applications/Firefox.app/Contents/MacOS/Firefox", urls [counter -1]);
-				break;
-			case 2:
-				
-				System.Diagnostics.Process.Start ("/Applications/Firefox.app/Contents/MacOS/Firefox", urls [counter -1]);
-				break;
-			case 3:
-				
-				System.Diagnostics.Process.Start ("/Applications/Firefox.app/Contents/MacOS/Firefox", urls [counter -1]);
-				break;
-			}
+			string platform = urls [0];
+
+			int areEqual = 'h'.CompareTo(platform[11]);
+			int areEqual2 = 'h'.CompareTo(platform[12]);
+
+			if (areEqual == 0 || areEqual == 32 || areEqual2 == 0 || areEqual2 == 32) {
+				System.Diagnostics.Process.Start ("/Applications/Firefox.app/Contents/MacOS/Firefox", urls [counter - 1]);} 
+			else {
+				System.Diagnostics.Process.Start ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", urls [counter - 1]);}
 		}
 
 		protected void OnDeleteEvent (object sender, DeleteEventArgs a){
