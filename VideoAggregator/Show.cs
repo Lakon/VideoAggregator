@@ -7,6 +7,7 @@ namespace VideoAggregator {
 		public string id;
 		public bool isMovie;
 		public string thumbURL;
+		public string thumb; //added 
 		public string desc;
 		public int numOfSeasons;
         public List<Season> seasons;
@@ -17,6 +18,7 @@ namespace VideoAggregator {
 			this.isMovie = isMovie;
 			numOfSeasons = 0;
             thumbURL = null;
+			thumb = null; //added 
             desc = "";
 			seasons = null;
         }
