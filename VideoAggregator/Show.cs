@@ -10,9 +10,9 @@ namespace VideoAggregator {
 		public string desc;
 		public int numOfSeasons;
         public List<Season> seasons;
-		Gdk.Pixbuf thumb; //added 
+		public Gdk.Pixbuf thumb; //added made public to resolve one of the errors 
 
-		public Show(string title, string id, Gdk.Pixbuf thumb, bool isMovie = false) {
+		public Show(string title, string id/*, Gdk.Pixbuf thumb, bool isMovie = false*/) {
 			this.title = title;
             this.id = id;
 			this.thumb = thumb; 

@@ -73,7 +73,7 @@ namespace VideoAggregator{
 				var definition = new {title = "", id = "", thumb = "", artwork_304x171 = ""};
 				var show_json = JsonConvert.DeserializeAnonymousType(result.ToString(), definition);
 
-				Show show = new Show (show_json.title, show_json.id, show_json.thumb); //added show_json.thumb 
+				Show show = new Show (show_json.title, show_json.id/*, show_json.thumb*/); //added show_json.thumb 
 				show.thumbURL = show_json.artwork_304x171;
 				//show.thumb = show_json.artwork_304x171; //SHOW THUMBNAIL ******
 				shows.Add(show);
@@ -188,7 +188,7 @@ namespace VideoAggregator{
 			foreach (var result in results){
 				var definition = new {title = "", id = "", poster_240x342 = ""};
 				var show_json = JsonConvert.DeserializeAnonymousType(result.ToString(), definition);
-				Show show = new Show (show_json.title, show_json.id, true);
+				Show show = new Show (show_json.title, show_json.id/*, true*/);
 				show.thumbURL = show_json.poster_240x342;
 				//show.thumb = show_json.poster_240x342; //SHOW THUMBNAIL ******
 
@@ -210,7 +210,7 @@ namespace VideoAggregator{
 			foreach (var result in results){
 				var definition = new {title = "", id = "", poster_240x342 = ""};
 				var show_json = JsonConvert.DeserializeAnonymousType(result.ToString(), definition);
-				Show show = new Show (show_json.title, show_json.id, true);
+				Show show = new Show (show_json.title, show_json.id/*, true*/);
 				show.thumbURL = show_json.poster_240x342;
 				//show.thumb = show_json.poster_240x342; //SHOW THUMBNAIL ******
 				shows.Add(show);
