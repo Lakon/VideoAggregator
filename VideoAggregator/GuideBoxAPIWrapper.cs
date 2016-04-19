@@ -70,11 +70,12 @@ namespace VideoAggregator{
 			List<Show> shows = new List<Show>();
 
 			foreach (var result in results){
-				var definition = new {title = "", id = "", artwork_304x171 = ""};
+				var definition = new {title = "", id = "", thumb = "", artwork_304x171 = ""};
 				var show_json = JsonConvert.DeserializeAnonymousType(result.ToString(), definition);
-				Show show = new Show (show_json.title, show_json.id);
+
+				Show show = new Show (show_json.title, show_json.id, show_json.thumb); //added show_json.thumb 
 				show.thumbURL = show_json.artwork_304x171;
-				show.thumb = show_json.artwork_304x171; //SHOW THUMBNAIL ******
+				//show.thumb = show_json.artwork_304x171; //SHOW THUMBNAIL ******
 				shows.Add(show);
 			}
 
@@ -97,7 +98,7 @@ namespace VideoAggregator{
 				var show_json = JsonConvert.DeserializeAnonymousType(result.ToString(), definition);
 				Show show = new Show (show_json.title, show_json.id);
 				show.thumbURL = show_json.artwork_304x171;
-				show.thumb = show_json.artwork_304x171; //SHOW THUMBNAIL ******
+				//show.thumb = show_json.artwork_304x171; //SHOW THUMBNAIL ******
 				shows.Add(show);
 			}
 			return shows;
@@ -130,7 +131,7 @@ namespace VideoAggregator{
 				Episode episode = new Episode (season, episode_json.episode_number, episode_json.title, episode_json.id);
 				episode.desc = episode_json.overview;
 				episode.thumbURL = episode_json.thumbnail_304x171;
-				episode.thumb = episode_json.thumbnail_304x171; //SHOW THUMBNAIL ******
+				//episode.thumb = episode_json.thumbnail_304x171; //SHOW THUMBNAIL ******
 
 				episodes.Add (episode);
 
@@ -189,7 +190,7 @@ namespace VideoAggregator{
 				var show_json = JsonConvert.DeserializeAnonymousType(result.ToString(), definition);
 				Show show = new Show (show_json.title, show_json.id, true);
 				show.thumbURL = show_json.poster_240x342;
-				show.thumb = show_json.poster_240x342; //SHOW THUMBNAIL ******
+				//show.thumb = show_json.poster_240x342; //SHOW THUMBNAIL ******
 
 				//result = image.thumbURL;  *******
 				shows.Add(show);
@@ -211,7 +212,7 @@ namespace VideoAggregator{
 				var show_json = JsonConvert.DeserializeAnonymousType(result.ToString(), definition);
 				Show show = new Show (show_json.title, show_json.id, true);
 				show.thumbURL = show_json.poster_240x342;
-				show.thumb = show_json.poster_240x342; //SHOW THUMBNAIL ******
+				//show.thumb = show_json.poster_240x342; //SHOW THUMBNAIL ******
 				shows.Add(show);
 			}
 			return shows;
