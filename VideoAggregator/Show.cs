@@ -12,14 +12,13 @@ namespace VideoAggregator {
         public List<Season> seasons;
 		public Gdk.Pixbuf thumb; //added made public to resolve one of the errors 
 
-		public Show(string title, string id/*, Gdk.Pixbuf thumb, bool isMovie = false*/) {
+		public Show(string title, string id, bool isMovie = false) {
 			this.title = title;
-            this.id = id;
-			this.thumb = thumb; 
+            this.id = id; 
 			this.isMovie = isMovie;
 			numOfSeasons = 0;
             thumbURL = null;
-			//thumb = null; //added 
+			thumb = null; //added 
             desc = "";
 			seasons = null;
         }
