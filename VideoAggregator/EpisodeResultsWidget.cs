@@ -11,14 +11,13 @@ namespace VideoAggregator
 			this.Build ();
 			this.parent = parent;
 
-			Gtk.ListStore episodeListStore = new Gtk.ListStore (typeof (string),  typeof (string), typeof(Episode));
+			Gtk.ListStore episodeListStore = new Gtk.ListStore (typeof (string), typeof (Gdk.Pixbuf), typeof(Episode));
 
 			this.treeview.AppendColumn ("Title", new Gtk.CellRendererText (), "text", 0);
-			this.treeview.AppendColumn ("Thumb URL", new Gtk.CellRendererText (), "text", 1);
+			this.treeview.AppendColumn ("Thumb", new Gtk.CellRendererPixbuf (), "pixbuf", 1); //Adds a column for Thumbnails 
 
 			foreach (var ep in season.episodes) {
-				episodeListStore.AppendValues (ep.title, ep.thumbURL, ep);
-				//Icon Build Here
+				episodeListStore.AppendValues (ep.title, ep.thumb, ep);
 			}
 
 			this.treeview.Model = episodeListStore;

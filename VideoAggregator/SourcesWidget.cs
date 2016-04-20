@@ -18,8 +18,6 @@ namespace VideoAggregator
 
 			foreach (var source in sources.Keys) {
 				sourcesListStore.AppendValues (source, sources[source]);
-				//Icon Build here Static
-				//switch statement for three services
 			}
 
 			this.treeview.Model = sourcesListStore;

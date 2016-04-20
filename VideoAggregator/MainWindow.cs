@@ -2,6 +2,7 @@
 using Gtk;
 using System.Collections.Generic;
 using System.Net;
+using System.IO;
 
 namespace VideoAggregator
 {
@@ -35,6 +36,15 @@ namespace VideoAggregator
 			errorLabel = new Gtk.Label ();
 			try{
 				List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (0, 25, Source.All);
+
+				//populate the thumbnails
+				foreach(var show in shows){
+					byte[] thumbNail = getThumbNail(show.thumbURL);
+					if (thumbNail != null)
+						show.thumb = new Gdk.Pixbuf(thumbNail);
+				}
+
+
 				embeddedWidget = new ShowResultsWidget (this, shows);
 				this.container.Add (embeddedWidget);
 
@@ -43,6 +53,22 @@ namespace VideoAggregator
 			}
 
 			this.ShowAll ();
+		}
+
+
+		private byte[] getThumbNail(string url){
+			byte[] imageBytes = null;
+			try{
+				using (var webClient = new WebClient ()) {
+					imageBytes = webClient.DownloadData (url);
+				}
+			}catch(WebException e){
+				Console.WriteLine(url);
+				Console.WriteLine (e);
+				return null;
+			}
+
+			return imageBytes;
 		}
 			
 
@@ -93,6 +119,14 @@ namespace VideoAggregator
 			try{
 				Season season = new Season(s.ToString());
 				season.episodes = GuideBoxAPIWrapper.getTVShowEpisodes (show.id, s.ToString());
+
+				//populate the thumbnails
+				foreach(var ep in season.episodes){
+					byte[] thumbNail = getThumbNail(ep.thumbURL);
+					if (thumbNail != null)
+						ep.thumb = new Gdk.Pixbuf(thumbNail);
+				}
+
 				embeddedWidget = new EpisodeResultsWidget (this, season);
 
 				this.container.Add (embeddedWidget);
@@ -154,10 +188,26 @@ namespace VideoAggregator
 				try{
 					if (showRadioButton.Active){
 						List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (searchText);
+
+						//populate the thumbnails
+						foreach(var show in shows){
+							byte[] thumbNail = getThumbNail(show.thumbURL);
+							if (thumbNail != null)
+								show.thumb = new Gdk.Pixbuf(thumbNail);
+						}
+
 						embeddedWidget = new ShowResultsWidget (this, shows);
 					}
 					else{
 						List<Show> shows = GuideBoxAPIWrapper.getMovieIds (searchText);
+
+						//populate the thumbnails
+						foreach(var show in shows){
+							byte[] thumbNail = getThumbNail(show.thumbURL);
+							if (thumbNail != null)
+								show.thumb = new Gdk.Pixbuf(thumbNail);
+						}
+
 						embeddedWidget = new ShowResultsWidget (this, shows);
 					}
 
@@ -175,10 +225,26 @@ namespace VideoAggregator
 			try{
 				if (showRadioButton.Active){
 					List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (0, 25, activeSource);
+
+					//populate the thumbnails
+					foreach(var show in shows){
+						byte[] thumbNail = getThumbNail(show.thumbURL);
+						if (thumbNail != null)
+							show.thumb = new Gdk.Pixbuf(thumbNail);
+					}
+
 					embeddedWidget = new ShowResultsWidget (this, shows);
 				}
 				else{
 					List<Show> shows = GuideBoxAPIWrapper.getMovieIds (0, 25, activeSource);
+
+					//populate the thumbnails
+					foreach(var show in shows){
+						byte[] thumbNail = getThumbNail(show.thumbURL);
+						if (thumbNail != null)
+							show.thumb = new Gdk.Pixbuf(thumbNail);
+					}
+
 					embeddedWidget = new ShowResultsWidget (this, shows);
 				}
 
