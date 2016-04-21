@@ -3,9 +3,8 @@
 namespace VideoAggregator
 {
 	[System.ComponentModel.ToolboxItem (true)]
-	public partial class EpisodeResultsWidget : Gtk.Bin
+	public partial class EpisodeResultsWidget : EmbeddedWidget
 	{
-		private MainWindow parent;
 		public EpisodeResultsWidget (MainWindow parent, Season season)
 		{
 			this.Build ();

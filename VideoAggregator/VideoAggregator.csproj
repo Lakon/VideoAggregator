@@ -78,6 +78,8 @@
     <Compile Include="gtk-gui\VideoAggregator.EpisodeResultsWidget.cs" />
     <Compile Include="SourcesWidget.cs" />
     <Compile Include="gtk-gui\VideoAggregator.SourcesWidget.cs" />
+    <Compile Include="EmbeddedWidget.cs" />
+    <Compile Include="gtk-gui\VideoAggregator.EmbeddedWidget.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

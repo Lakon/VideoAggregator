@@ -8,8 +8,8 @@ namespace VideoAggregator
 {
 	public partial class MainWindow: Gtk.Window
 	{
-		private Gtk.Widget embeddedWidget;
-		private Stack<Gtk.Widget> previousWidgets;
+		private EmbeddedWidget embeddedWidget;
+		private Stack<EmbeddedWidget> previousWidgets;
 		private Gtk.Label errorLabel;
 
 		private Source activeSource {
@@ -32,7 +32,7 @@ namespace VideoAggregator
 		public MainWindow () : base (Gtk.WindowType.Toplevel)
 		{
 			this.Build ();
-			previousWidgets = new Stack<Gtk.Widget> ();
+			previousWidgets = new Stack<EmbeddedWidget> ();
 			errorLabel = new Gtk.Label ();
 			try{
 				List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (0, 25, Source.All);

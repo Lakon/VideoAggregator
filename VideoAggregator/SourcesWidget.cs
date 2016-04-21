@@ -4,9 +4,8 @@ using System.Collections.Generic;
 namespace VideoAggregator
 {
 	[System.ComponentModel.ToolboxItem (true)]
-	public partial class SourcesWidget : Gtk.Bin
+	public partial class SourcesWidget : EmbeddedWidget
 	{
-		private MainWindow parent;
 		public SourcesWidget (MainWindow parent, Dictionary<string, List<string> > sources)
 		{
 			this.Build ();
