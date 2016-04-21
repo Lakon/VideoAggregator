@@ -11,25 +11,49 @@ namespace VideoAggregator
 			this.Build ();
 			this.parent = parent;
 			this.show = show;
+			initTable ();
 
-			Gtk.ListStore seasonListStore = new Gtk.ListStore (typeof (int));
+			int curSeason = 1;
+			for (uint i = 0; i < 5; i++) {
+				if (curSeason > show.numOfSeasons)
+					break;
+				
+				for (uint j = 0; j < 5; j++) {
+					if (curSeason > show.numOfSeasons)
+						break;
 
-			this.treeview.AppendColumn ("Season", new Gtk.CellRendererText (), "text", 0);
+					Gtk.Image img = new Gtk.Image();
+					if (show.thumb != null)
+						img.Pixbuf = show.thumb;
 
-			for(int i = 1; i <= show.numOfSeasons; i++) {
-				seasonListStore.AppendValues (i);
+					Gtk.Label lbl = new Gtk.Label ("Season " + curSeason.ToString());
+					Gtk.VBox box = new Gtk.VBox ();
+					box.Add (img);
+					box.Add (lbl);
+					Gtk.EventBox eventbox = new Gtk.EventBox ();
+					eventbox.Add (box);
+
+					Func<int, Gtk.ButtonPressEventHandler> ButtonPressWrapper = ((season) => ((s, e) => { OnSeasonSelected(s, e, season); }));
+					eventbox.ButtonPressEvent += ButtonPressWrapper(curSeason);
+
+					Func<Gtk.EventBox, Gtk.EnterNotifyEventHandler> EnterNotifyWrapper = ((Gtk.EventBox eBox) => ((s, e) => {OnHoverEnter(s,e,eBox);}));
+					eventbox.EnterNotifyEvent += EnterNotifyWrapper(eventbox);
+
+					Func<Gtk.EventBox, Gtk.LeaveNotifyEventHandler> LeaveNotifyWrapper = ((Gtk.EventBox eBox) => ((s, e) => {OnHoverLeave(s,e,eBox);}));
+					eventbox.LeaveNotifyEvent += LeaveNotifyWrapper(eventbox);
+
+					table.Attach (eventbox, j, j + 1, i, i + 1);
+
+					curSeason++;
+
+				}
 			}
-
-			this.treeview.Model = seasonListStore;
 			this.ShowAll ();
-			Console.WriteLine ("SeasonResultsWindow Created");
+			Console.WriteLine ("SeasonResultsWidget Created");
 		}
 
-		protected void OnSeasonSelected (object o, Gtk.RowActivatedArgs args)
+		protected void OnSeasonSelected (object o, Gtk.ButtonPressEventArgs args, int season)
 		{
-			Gtk.TreeIter iter;
-			this.treeview.Model.GetIter (out iter, args.Path);
-			int season = (int) this.treeview.Model.GetValue (iter, 0);
 			parent.seasonSelected (this.show, season);
 		}
 	}

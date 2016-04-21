@@ -99,7 +99,7 @@ namespace VideoAggregator
 			try{
 				if (show.isMovie){
 					Dictionary<string, List<string> > sources = GuideBoxAPIWrapper.getMovieLinks (show.id);
-					embeddedWidget = new SourcesWidget (this, sources);
+					embeddedWidget = new SourcesWidget (this, show.desc, show.thumb, sources);
 				}
 				else{
 					show.numOfSeasons = GuideBoxAPIWrapper.getTVShowSeasons (show.id);
@@ -141,7 +141,7 @@ namespace VideoAggregator
 			clearContainer ();
 			try{
 				Dictionary<string, List<string> > sources = GuideBoxAPIWrapper.getEpisodeLinks (episode.id);
-				embeddedWidget = new SourcesWidget (this, sources);
+				embeddedWidget = new SourcesWidget (this, episode.desc, episode.thumb, sources);
 
 				this.container.Add (embeddedWidget);
 

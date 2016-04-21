@@ -9,26 +9,51 @@ namespace VideoAggregator
 		{
 			this.Build ();
 			this.parent = parent;
+			initTable ();
 
-			Gtk.ListStore episodeListStore = new Gtk.ListStore (typeof (string), typeof (Gdk.Pixbuf), typeof(Episode));
+			int curEpisode = 0;
+			for (uint i = 0; i < 5; i++) {
+				if (curEpisode >= season.episodes.Count)
+					break;
+				
+				for (uint j = 0; j < 5; j++) {
+					if (curEpisode >= season.episodes.Count)
+						break;
 
-			this.treeview.AppendColumn ("Title", new Gtk.CellRendererText (), "text", 0);
-			this.treeview.AppendColumn ("Thumb", new Gtk.CellRendererPixbuf (), "pixbuf", 1); //Adds a column for Thumbnails 
+					Gtk.Image img = new Gtk.Image();
+					if (season.episodes[curEpisode].thumb != null)
+						img.Pixbuf = season.episodes[curEpisode].thumb;
 
-			foreach (var ep in season.episodes) {
-				episodeListStore.AppendValues (ep.title, ep.thumb, ep);
+					Gtk.Label lbl = new Gtk.Label ((curEpisode+1).ToString() + ". " + season.episodes[curEpisode].title);
+					Gtk.VBox box = new Gtk.VBox ();
+					box.Add (img);
+					box.Add (lbl);
+					Gtk.EventBox eventbox = new Gtk.EventBox ();
+					eventbox.Add (box);
+
+					Func<Episode, Gtk.ButtonPressEventHandler> ButtonPressWrapper = ((ep) => ((s, e) => { OnEpisodeSelected(s, e, ep); }));
+					eventbox.ButtonPressEvent += ButtonPressWrapper(season.episodes[curEpisode]);
+
+					Func<Gtk.EventBox, Gtk.EnterNotifyEventHandler> EnterNotifyWrapper = ((Gtk.EventBox eBox) => ((s, e) => {OnHoverEnter(s,e,eBox);}));
+					eventbox.EnterNotifyEvent += EnterNotifyWrapper(eventbox);
+
+					Func<Gtk.EventBox, Gtk.LeaveNotifyEventHandler> LeaveNotifyWrapper = ((Gtk.EventBox eBox) => ((s, e) => {OnHoverLeave(s,e,eBox);}));
+					eventbox.LeaveNotifyEvent += LeaveNotifyWrapper(eventbox);
+
+					table.Attach (eventbox, j, j + 1, i, i + 1);
+
+					curEpisode++;
+					if (curEpisode >= season.episodes.Count)
+						break;
+				}
 			}
 
-			this.treeview.Model = episodeListStore;
 			this.ShowAll ();
 			Console.WriteLine ("EpisodeResultsWindow Created");
 		}
 
-		protected void OnEpisodeSelected (object o, Gtk.RowActivatedArgs args)
+		protected void OnEpisodeSelected (object o, Gtk.ButtonPressEventArgs args, Episode ep)
 		{
-			Gtk.TreeIter iter;
-			this.treeview.Model.GetIter (out iter, args.Path);
-			Episode ep = (Episode) this.treeview.Model.GetValue (iter, 2);
 			parent.episodeSelected (ep);
 		}
 	}
