@@ -43,6 +43,8 @@ namespace VideoAggregator
 				img.Pixbuf = thumb;
 
 			Gtk.Label lbl = new Gtk.Label (desc);
+			lbl.LineWrap = true;
+			lbl.WidthRequest = 600;
 			Gtk.VBox box = new Gtk.VBox ();
 			box.Add (img);
 			box.Add (lbl);
