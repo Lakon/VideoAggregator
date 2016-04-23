@@ -36,6 +36,7 @@ namespace VideoAggregator
 		public MainWindow () : base (Gtk.WindowType.Toplevel)
 		{
 			this.Build ();
+			backButton.Sensitive = false;
 			previousWidgets = new Stack<EmbeddedWidget> ();
 			errorLabel = new Gtk.Label ();
 
@@ -88,6 +89,13 @@ namespace VideoAggregator
 			this.ShowAll ();
 		}
 
+		private void updateBackButton(){
+			if (previousWidgets.Count <= 0)
+				backButton.Sensitive = false;
+			else
+				backButton.Sensitive = true;
+		}
+
 		private void showLoadingScreen(){
 			clearContainer ();
 			container.Add (loadingAnimation);
@@ -117,6 +125,7 @@ namespace VideoAggregator
 			if (container.Children.Length == 2) {
 				if (container.Children [1] == embeddedWidget) {
 					previousWidgets.Push (embeddedWidget);
+					updateBackButton ();
 				}
 				container.Remove (container.Children [1]);
 			} else if (container.Children.Length > 2) {
@@ -294,6 +303,8 @@ namespace VideoAggregator
 					container.Remove (container.Children[1]);
 
 				embeddedWidget = previousWidgets.Pop ();
+
+				updateBackButton ();
 
 				container.Add (embeddedWidget);
 			}
