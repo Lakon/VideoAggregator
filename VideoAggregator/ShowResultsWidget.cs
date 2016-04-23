@@ -4,41 +4,73 @@ using System.Collections.Generic;
 namespace VideoAggregator
 {
 	[System.ComponentModel.ToolboxItem (true)]
-	public partial class ShowResultsWidget : Gtk.Bin
+	public class ShowResultsWidget : EmbeddedWidget
 	{
-		private MainWindow parent;
-		public ShowResultsWidget (MainWindow parent, List<Show> shows)
+		private List<Show> shows;
+		public ShowResultsWidget (MainWindow parent, List<Show> shows) : base()
 		{
-			this.Build ();
 			this.parent = parent;
+			this.shows = shows;
 
-			Gtk.ListStore showListStore = new Gtk.ListStore (typeof (string),  typeof (string), typeof (Gdk.Pixbuf), typeof(Show));
-
-			this.treeview.AppendColumn ("Title", new Gtk.CellRendererText (), "text", 0);
-			this.treeview.AppendColumn ("Thumb URL", new Gtk.CellRendererText (), "text", 1);
-			this.treeview.AppendColumn ("Thumb", new Gtk.CellRendererPixbuf (), "pixbuf", 2); //Adds a column for Thumbnails 
-
-				foreach (var show in shows) {
-					showListStore.AppendValues (show.title, show.thumbURL, show.thumb, show); //added show.thumb
-					//showListStore.AppendValues (show.title, show.thumbURL, show);
-				//Icon Build Here
-				//this.treeview.Image(show.thumbURL);
-				//http://stackoverflow.com/questions/3887228/gtkbutton-just-shows-text-but-no-image
-				}
-			
-			this.treeview.Model = showListStore;
+			this.Build ();
 			this.ShowAll ();
-			Console.WriteLine ("ShowResultsWindow Created");
+
+			Console.WriteLine ("ShowResultsWidget Created");
 		}
 
-		protected void OnShowSelected (object o, Gtk.RowActivatedArgs args)
+		protected new void Build ()
 		{
-			Gtk.TreeIter iter;
-			//showListStore.GetIter (out iter, args.Path); 
-			this.treeview.Model.GetIter (out iter, args.Path);
-			Show show = (Show) this.treeview.Model.GetValue (iter, 3); //was orginally 2 
+			this.Name = "ShowResultsWidget";
+			if ((this.Child != null)) {
+				this.Child.ShowAll ();
+			}
+			initTable ();
+			populateTable ();
+		}
+
+		protected void populateTable(){
+			int curShow = 0;
+			for (uint i = 0; i < 5; i++) {
+				if (curShow >= shows.Count)
+					break;
+
+				for (uint j = 0; j < 5; j++) {
+					if (curShow >= shows.Count)
+						break;
+
+					Gtk.Image img = new Gtk.Image();
+					if (shows[curShow].thumb != null)
+						img.Pixbuf = shows[curShow].thumb;
+
+					Gtk.Label lbl = new Gtk.Label (shows[curShow].title);
+					Gtk.VBox box = new Gtk.VBox ();
+					box.Add (img);
+					box.Add (lbl);
+					Gtk.EventBox eventbox = new Gtk.EventBox ();
+					eventbox.Add (box);
+
+					Func<Show, Gtk.ButtonPressEventHandler> ButtonPressWrapper = ((show) => ((s, e) => { OnShowSelected(s, e, show); }));
+					eventbox.ButtonPressEvent += ButtonPressWrapper(shows[curShow]);
+
+					Func<Gtk.EventBox, Gtk.EnterNotifyEventHandler> EnterNotifyWrapper = ((Gtk.EventBox eBox) => ((s, e) => {OnHoverEnter(s,e,eBox);}));
+					eventbox.EnterNotifyEvent += EnterNotifyWrapper(eventbox);
+
+					Func<Gtk.EventBox, Gtk.LeaveNotifyEventHandler> LeaveNotifyWrapper = ((Gtk.EventBox eBox) => ((s, e) => {OnHoverLeave(s,e,eBox);}));
+					eventbox.LeaveNotifyEvent += LeaveNotifyWrapper(eventbox);
+
+					table.Attach (eventbox, j, j + 1, i, i + 1);
+
+					curShow++;
+				}
+			}
+		}
+
+		protected void OnShowSelected (object o, Gtk.ButtonPressEventArgs args, Show show)
+		{
 			parent.showSelected (show);
 		}
+
+
 	}
 }
 

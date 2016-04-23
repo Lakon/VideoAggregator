@@ -8,6 +8,7 @@ namespace VideoAggregator {
         public string id;
         public string thumbURL;
         public string desc;
+		public Gdk.Pixbuf thumb;
 
 
         public Episode(string season, string num, string title, string id) {
@@ -16,6 +17,7 @@ namespace VideoAggregator {
             this.title = title;
             this.id = id;
             thumbURL = null;
+			thumb = null;
             desc = "";
         }
     }
