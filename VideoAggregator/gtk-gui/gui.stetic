@@ -47,13 +47,12 @@
                     <property name="WidthRequest">200</property>
                     <property name="Tooltip" translatable="yes">Sources</property>
                     <property name="IsTextCombo">True</property>
-                    <property name="Items" translatable="yes">
-                      All
-                      Hulu
-                      Amazon
-                      YouTube
-                    </property>
+                    <property name="Items" translatable="yes">All
+Hulu
+Amazon
+YouTube</property>
                     <property name="Active">0</property>
+                    <signal name="Changed" handler="OnSourceChanged" />
                   </widget>
                   <packing>
                     <property name="Position">0</property>
@@ -71,6 +70,7 @@
                         <property name="MemberName" />
                         <property name="CanFocus">True</property>
                         <property name="Label" translatable="yes">Show</property>
+                        <property name="Active">True</property>
                         <property name="DrawIndicator">True</property>
                         <property name="HasLabel">True</property>
                         <property name="UseUnderline">True</property>

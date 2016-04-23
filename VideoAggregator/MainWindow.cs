@@ -99,7 +99,7 @@ namespace VideoAggregator
 			try{
 				if (show.isMovie){
 					Dictionary<string, List<string> > sources = GuideBoxAPIWrapper.getMovieLinks (show.id);
-					embeddedWidget = new SourcesWidget (this, show.desc, show.thumb, sources);
+					embeddedWidget = new SourcesWidget (this, show.desc, show.thumb, sources, activeSource);
 				}
 				else{
 					show.numOfSeasons = GuideBoxAPIWrapper.getTVShowSeasons (show.id);
@@ -141,7 +141,7 @@ namespace VideoAggregator
 			clearContainer ();
 			try{
 				Dictionary<string, List<string> > sources = GuideBoxAPIWrapper.getEpisodeLinks (episode.id);
-				embeddedWidget = new SourcesWidget (this, episode.desc, episode.thumb, sources);
+				embeddedWidget = new SourcesWidget (this, episode.desc, episode.thumb, sources, activeSource);
 
 				this.container.Add (embeddedWidget);
 
@@ -253,6 +253,11 @@ namespace VideoAggregator
 			}catch(WebException exception){
 				outputError (exception.Message);
 			}
+		}
+
+		protected void OnSourceChanged (object sender, EventArgs e)
+		{
+			embeddedWidget.OnSourceChanged (activeSource);
 		}
 	}
 }

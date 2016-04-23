@@ -10,12 +10,14 @@ namespace VideoAggregator
 		private string desc;
 		private Gdk.Pixbuf thumb;
 		private Dictionary<string, List<string> > sources;
-		public SourcesWidget (MainWindow parent, string desc, Gdk.Pixbuf thumb, Dictionary<string, List<string> > sources) : base()
+		private Source activeSource;
+		public SourcesWidget (MainWindow parent, string desc, Gdk.Pixbuf thumb, Dictionary<string, List<string> > sources, Source activeSource) : base()
 		{
 			this.parent = parent;
 			this.sources = sources;
 			this.desc = desc;
 			this.thumb = thumb;
+			this.activeSource = activeSource;
 
 			this.Build ();
 			this.ShowAll ();
@@ -65,13 +67,36 @@ namespace VideoAggregator
 		protected void populateTable(){
 			List<string> srcs = sources.Keys.ToList();
 
+			switch (activeSource) {
+			case Source.All:
+				break;
+			case Source.Hulu:
+				if (srcs.Contains ("Hulu"))
+					srcs = new List<string>{ "Hulu" };
+				else
+					srcs = new List<string> ();
+				break;
+			case Source.Amazon:
+				if (srcs.Contains ("Amazon"))
+					srcs = new List<string>{ "Amazon" };
+				else
+					srcs = new List<string> ();
+				break;
+			case Source.YouTube:
+				if (srcs.Contains ("YouTube"))
+					srcs = new List<string>{ "YouTube" };
+				else
+					srcs = new List<string> ();
+				break;
+			}
+
 			int curSource = 0;
 			for (uint i = 0; i < 1; i++) {
-				if (curSource >= sources.Keys.Count)
+				if (curSource >= srcs.Count)
 					break;
 
 				for (uint j = 0; j < 3; j++) {
-					if (curSource >= sources.Keys.Count)
+					if (curSource >= srcs.Count)
 						break;
 
 					Gtk.Image img = new Gtk.Image();
@@ -105,6 +130,14 @@ namespace VideoAggregator
 		{
 			List<string> urls = sources[source];
 			parent.sourceSelected (source, urls);
+		}
+
+		public override void OnSourceChanged(Source activeSource){
+			this.activeSource = activeSource;
+			scrolledwindow.Child.Destroy ();
+			initTable ();
+			populateTable ();
+			this.ShowAll ();
 		}
 	}
 }

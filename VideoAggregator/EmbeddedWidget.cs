@@ -78,6 +78,10 @@ namespace VideoAggregator
 		protected virtual void OnHoverLeave(object o, Gtk.LeaveNotifyEventArgs args, Gtk.EventBox eBox){
 			eBox.State = Gtk.StateType.Normal;
 		}
+
+		public virtual void OnSourceChanged(Source activeSource){
+			//nothing by default
+		}
 	}
 }
 

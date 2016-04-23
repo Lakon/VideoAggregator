@@ -162,6 +162,7 @@ namespace VideoAggregator
 			this.Show ();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
 			this.backButton.Clicked += new global::System.EventHandler (this.OnBackButtonClicked);
+			this.sourceComboBox.Changed += new global::System.EventHandler (this.OnSourceChanged);
 			this.popularButton.Clicked += new global::System.EventHandler (this.OnPopButtonClicked);
 			this.searchButton.Clicked += new global::System.EventHandler (this.OnSearchButtonClicked);
 		}
