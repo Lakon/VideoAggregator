@@ -37,6 +37,7 @@ namespace VideoAggregator
 		{
 			this.Build ();
 			backButton.Sensitive = false;
+			searchButton.Sensitive = false;
 			previousWidgets = new Stack<EmbeddedWidget> ();
 			errorLabel = new Gtk.Label ();
 
@@ -440,6 +441,15 @@ namespace VideoAggregator
 		protected void OnSourceChanged (object sender, EventArgs e)
 		{
 			embeddedWidget.OnSourceChanged (activeSource);
+		}
+
+		protected void OnSearchEntryChanged (object sender, EventArgs e)
+		{
+			string searchText = searchEntry.Text.Trim();
+			if (searchText != null && searchText != "")
+				searchButton.Sensitive = true;
+			else
+				searchButton.Sensitive = false;
 		}
 	}
 }
