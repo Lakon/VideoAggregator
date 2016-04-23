@@ -9,6 +9,7 @@ namespace VideoAggregator
 		{
 			Application.Init ();
 			MainWindow win = new MainWindow ();
+			win.Maximize ();
 			win.Show ();
 			Application.Run ();
 
