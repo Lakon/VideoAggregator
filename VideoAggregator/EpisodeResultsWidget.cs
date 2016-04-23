@@ -3,19 +3,36 @@
 namespace VideoAggregator
 {
 	[System.ComponentModel.ToolboxItem (true)]
-	public partial class EpisodeResultsWidget : EmbeddedWidget
+	public class EpisodeResultsWidget : EmbeddedWidget
 	{
-		public EpisodeResultsWidget (MainWindow parent, Season season)
+		private Season season;
+		public EpisodeResultsWidget (MainWindow parent, Season season) : base()
 		{
-			this.Build ();
 			this.parent = parent;
-			initTable ();
+			this.season = season;
 
+			this.Build ();
+			this.ShowAll ();
+
+			Console.WriteLine ("EpisodeResultsWindow Created");
+		}
+
+		protected new void Build ()
+		{
+			this.Name = "EpisodeResultsWidget";
+			if ((this.Child != null)) {
+				this.Child.ShowAll ();
+			}
+			initTable ();
+			populateTable ();
+		}
+
+		protected void populateTable(){
 			int curEpisode = 0;
 			for (uint i = 0; i < 5; i++) {
 				if (curEpisode >= season.episodes.Count)
 					break;
-				
+
 				for (uint j = 0; j < 5; j++) {
 					if (curEpisode >= season.episodes.Count)
 						break;
@@ -47,9 +64,6 @@ namespace VideoAggregator
 						break;
 				}
 			}
-
-			this.ShowAll ();
-			Console.WriteLine ("EpisodeResultsWindow Created");
 		}
 
 		protected void OnEpisodeSelected (object o, Gtk.ButtonPressEventArgs args, Episode ep)

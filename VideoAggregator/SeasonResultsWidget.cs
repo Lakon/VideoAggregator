@@ -3,21 +3,36 @@
 namespace VideoAggregator
 {
 	[System.ComponentModel.ToolboxItem (true)]
-	public partial class SeasonResultsWidget : EmbeddedWidget
+	public class SeasonResultsWidget : EmbeddedWidget
 	{
 		private Show show;
-		public SeasonResultsWidget (MainWindow parent, Show show)
+		public SeasonResultsWidget (MainWindow parent, Show show) : base()
 		{
-			this.Build ();
 			this.parent = parent;
 			this.show = show;
-			initTable ();
 
+			this.Build ();
+			this.ShowAll ();
+
+			Console.WriteLine ("SeasonResultsWidget Created");
+		}
+
+		protected new void Build ()
+		{
+			this.Name = "SeasonResultsWidget";
+			if ((this.Child != null)) {
+				this.Child.ShowAll ();
+			}
+			initTable ();
+			populateTable ();
+		}
+
+		protected void populateTable(){
 			int curSeason = 1;
 			for (uint i = 0; i < 5; i++) {
 				if (curSeason > show.numOfSeasons)
 					break;
-				
+
 				for (uint j = 0; j < 5; j++) {
 					if (curSeason > show.numOfSeasons)
 						break;
@@ -48,8 +63,6 @@ namespace VideoAggregator
 
 				}
 			}
-			this.ShowAll ();
-			Console.WriteLine ("SeasonResultsWidget Created");
 		}
 
 		protected void OnSeasonSelected (object o, Gtk.ButtonPressEventArgs args, int season)

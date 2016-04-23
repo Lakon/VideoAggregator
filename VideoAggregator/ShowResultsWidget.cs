@@ -4,27 +4,44 @@ using System.Collections.Generic;
 namespace VideoAggregator
 {
 	[System.ComponentModel.ToolboxItem (true)]
-	public partial class ShowResultsWidget : EmbeddedWidget
+	public class ShowResultsWidget : EmbeddedWidget
 	{
-		public ShowResultsWidget (MainWindow parent, List<Show> shows)
+		private List<Show> shows;
+		public ShowResultsWidget (MainWindow parent, List<Show> shows) : base()
 		{
-			this.Build ();
 			this.parent = parent;
-			initTable ();
+			this.shows = shows;
 
+			this.Build ();
+			this.ShowAll ();
+
+			Console.WriteLine ("ShowResultsWidget Created");
+		}
+
+		protected new void Build ()
+		{
+			this.Name = "ShowResultsWidget";
+			if ((this.Child != null)) {
+				this.Child.ShowAll ();
+			}
+			initTable ();
+			populateTable ();
+		}
+
+		protected void populateTable(){
 			int curShow = 0;
 			for (uint i = 0; i < 5; i++) {
 				if (curShow >= shows.Count)
 					break;
-				
+
 				for (uint j = 0; j < 5; j++) {
 					if (curShow >= shows.Count)
 						break;
-					
+
 					Gtk.Image img = new Gtk.Image();
 					if (shows[curShow].thumb != null)
 						img.Pixbuf = shows[curShow].thumb;
-					
+
 					Gtk.Label lbl = new Gtk.Label (shows[curShow].title);
 					Gtk.VBox box = new Gtk.VBox ();
 					box.Add (img);
@@ -46,9 +63,6 @@ namespace VideoAggregator
 					curShow++;
 				}
 			}
-
-			this.ShowAll ();
-			Console.WriteLine ("ShowResultsWidget Created");
 		}
 
 		protected void OnShowSelected (object o, Gtk.ButtonPressEventArgs args, Show show)
