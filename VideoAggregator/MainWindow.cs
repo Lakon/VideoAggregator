@@ -275,15 +275,27 @@ namespace VideoAggregator
 		}
 
 		public void sourceSelected(string source, List<string> urls){
+
+
 			Console.WriteLine (source);
 			foreach (string url in urls) {
 				Console.WriteLine (url);
 			}
 
 			if (source == "Hulu") {
-				System.Diagnostics.Process.Start ("/Applications/Firefox.app/Contents/MacOS/Firefox", urls [0]);} 
+
+				//minimize and launch Firefox
+				this.Iconify ();
+				System.Diagnostics.Process.Start ("/Applications/Firefox.app/Contents/MacOS/Firefox", urls [0]);
+
+			} 
 			else {
-				System.Diagnostics.Process.Start ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", urls [0]);}
+
+				//minimize and launch Chrome
+				this.Iconify();
+				System.Diagnostics.Process.Start ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", urls [0]);
+
+			}
 		}
 
 		protected void OnDeleteEvent (object sender, Gtk.DeleteEventArgs a){
