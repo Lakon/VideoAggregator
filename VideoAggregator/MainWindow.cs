@@ -295,19 +295,22 @@ namespace VideoAggregator
 			foreach (string url in urls) {
 				Console.WriteLine (url);
 			}
-
 			if (source == "Hulu") {
 
 				//minimize and launch Firefox
 				this.Iconify ();
+				//
+				System.Diagnostics.Process.Start ("firefox.exe", urls [0]);
 				System.Diagnostics.Process.Start ("/Applications/Firefox.app/Contents/MacOS/Firefox", urls [0]);
-
+				System.Diagnostics.Process.Start("/usr/bin/firefox" , urls [0]);
 			} 
 			else {
 
 				//minimize and launch Chrome
 				this.Iconify();
+				System.Diagnostics.Process.Start ("firefox.exe", urls [0]);
 				System.Diagnostics.Process.Start ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", urls [0]);
+				System.Diagnostics.Process.Start("/usr/bin/firefox" , urls [0]);
 
 			}
 		}
