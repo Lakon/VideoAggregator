@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace VideoAggregator
 {
-	[System.ComponentModel.ToolboxItem (true)]
+	//[System.ComponentModel.ToolboxItem (true)]
 	public class SourcesWidget : EmbeddedWidget
 	{
 		private string desc;

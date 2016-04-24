@@ -2,7 +2,7 @@
 
 namespace VideoAggregator
 {
-	[System.ComponentModel.ToolboxItem (true)]
+	//[System.ComponentModel.ToolboxItem (true)]
 	public class EpisodeResultsWidget : EmbeddedWidget
 	{
 		private Season season;

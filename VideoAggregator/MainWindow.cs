@@ -133,13 +133,13 @@ namespace VideoAggregator
 		//clears whatever is in the lower part of the container
 		//if it's the embeddedWidget then it pushes it to stack
 		private void clearContainer(){
-			if (container.Children.Length == 2) {
-				if (container.Children [1] == embeddedWidget) {
+			if (container.Children.Length == 3) {
+				if (container.Children [2] == embeddedWidget) {
 					previousWidgets.Push (embeddedWidget);
 					updateBackButton ();
 				}
-				container.Remove (container.Children [1]);
-			} else if (container.Children.Length > 2) {
+				container.Remove (container.Children [2]);
+			} else if (container.Children.Length > 3) {
 				Console.WriteLine ("Somethings wrong");
 			}
 		}
@@ -322,8 +322,8 @@ namespace VideoAggregator
 			loadingResultsCancellationSource.Cancel ();
 
 			if (previousWidgets.Count != 0) {
-				if (container.Children.Length == 2)
-					container.Remove (container.Children[1]);
+				if (container.Children.Length == 3)
+					container.Remove (container.Children[2]);
 
 				embeddedWidget = previousWidgets.Pop ();
 
@@ -483,6 +483,29 @@ namespace VideoAggregator
 				searchButton.Sensitive = true;
 			else
 				searchButton.Sensitive = false;
+		}
+
+		protected void OnAboutSelected (object sender, EventArgs e)
+		{
+			// Create a new About dialog
+			Gtk.AboutDialog about = new Gtk.AboutDialog();
+
+			// Change the Dialog's properties to the appropriate values.
+			about.ProgramName = "Team Raspberry's Video Aggregator";
+			about.Authors = new string[]{ "Michael Hendrick", "Thomas Martin", "Elizabeth Razo" };
+			about.Comments = "UHCL Senior Project Spring 2016.\nPowered by Gtk# and Guidebox.";
+			about.Version = "1.0.0";
+
+			// Show the Dialog and pass it control
+			about.Run();
+
+			// Destroy the dialog
+			about.Destroy();
+		}
+
+		protected void OnBrowserSetUpSelected (object sender, EventArgs e)
+		{
+
 		}
 	}
 }

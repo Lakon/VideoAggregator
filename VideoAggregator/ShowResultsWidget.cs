@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace VideoAggregator
 {
-	[System.ComponentModel.ToolboxItem (true)]
+	//[System.ComponentModel.ToolboxItem (true)]
 	public class ShowResultsWidget : EmbeddedWidget
 	{
 		private List<Show> shows;
