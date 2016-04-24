@@ -232,6 +232,10 @@ namespace VideoAggregator
 
 				//show the results
 				Gtk.Application.Invoke (delegate {
+					if (season.episodes.Count == 0){
+						outputError("No available episodes");
+						return;
+					}
 					embeddedWidget = new EpisodeResultsWidget (this, season);
 					clearContainer ();
 					this.container.Add (embeddedWidget);
