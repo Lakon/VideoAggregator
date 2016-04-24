@@ -13,7 +13,7 @@ namespace VideoAggregator
 		private EmbeddedWidget embeddedWidget;
 		private Stack<EmbeddedWidget> previousWidgets;
 		private Gtk.Label errorLabel;
-		private Gtk.Image loadingAnimation;
+		private Gdk.PixbufAnimation loadingAnimation;
 		private CancellationTokenSource loadingResultsCancellationSource;
 
 		private Source activeSource {
@@ -43,7 +43,7 @@ namespace VideoAggregator
 
 			//load the loading animation
 			using (Stream imgStream = GetType ().Assembly.GetManifestResourceStream ("loadingAnimation")) { 
-				loadingAnimation = new Gtk.Image (new Gdk.PixbufAnimation(imgStream));
+				loadingAnimation = new Gdk.PixbufAnimation(imgStream);
 			}
 
 			//make a new CancellationSource for a new task
@@ -97,9 +97,19 @@ namespace VideoAggregator
 				backButton.Sensitive = true;
 		}
 
-		private void showLoadingScreen(){
+		//This shows a loading graphic and a message
+		//it uses a table to center both items
+		private void showLoadingScreen(string message = "Loading"){
 			clearContainer ();
-			container.Add (loadingAnimation);
+
+			Gtk.Table table = new Gtk.Table (((uint)(6)), ((uint)(6)), true);
+			table.BorderWidth = 2;
+			Gtk.Image img = new Gtk.Image (loadingAnimation);
+			table.Attach (img, 2, 4, 2, 3);
+
+			table.Attach (new Gtk.Label (message), 2, 4, 3, 4);
+
+			container.Add(table);
 			this.ShowAll ();
 		}
 
@@ -144,7 +154,7 @@ namespace VideoAggregator
 		}
 
 		public void showSelected(Show show){
-			showLoadingScreen();
+			showLoadingScreen("Loading " + show.title);
 
 			//make a new CancellationSource for a new task
 			loadingResultsCancellationSource = new CancellationTokenSource ();
@@ -195,7 +205,7 @@ namespace VideoAggregator
 
 
 		public void seasonSelected(Show show, int s){
-			showLoadingScreen();
+			showLoadingScreen ("Loading Season " + s.ToString() + " of " + show.title);
 
 			//make a new CancellationSource for a new task
 			loadingResultsCancellationSource = new CancellationTokenSource ();
@@ -240,7 +250,7 @@ namespace VideoAggregator
 
 
 		public void episodeSelected(Episode episode){
-			showLoadingScreen();
+			showLoadingScreen("Loading Episode " + episode.num.ToString() + ". " + episode.title);
 
 			//make a new CancellationSource for a new task
 			loadingResultsCancellationSource = new CancellationTokenSource ();
@@ -331,7 +341,13 @@ namespace VideoAggregator
 
 			//cancel any task that might be running
 			loadingResultsCancellationSource.Cancel ();
-			showLoadingScreen();
+
+			string msg = "";
+			if (showRadioButton.Active)
+				msg = "Searching Shows for " + searchText;
+			else
+				msg = "Searching Movies for " + searchText;
+			showLoadingScreen(msg);
 
 			//make a new CancellationSource for a new task
 			loadingResultsCancellationSource = new CancellationTokenSource ();
@@ -394,7 +410,12 @@ namespace VideoAggregator
 		{
 			//cancel any task that might be running
 			loadingResultsCancellationSource.Cancel ();
-			showLoadingScreen();
+			string msg = "";
+			if (showRadioButton.Active)
+				msg = "Searching for Popular Shows";
+			else
+				msg = "Searching for Popular Movies";
+			showLoadingScreen(msg);
 
 			//make a new CancellationSource for a new task
 			loadingResultsCancellationSource = new CancellationTokenSource ();
