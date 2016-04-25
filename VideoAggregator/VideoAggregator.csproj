@@ -61,6 +61,15 @@
     <EmbeddedResource Include="loadingAnimation.gif">
       <LogicalName>loadingAnimation</LogicalName>
     </EmbeddedResource>
+    <EmbeddedResource Include="Amazon_logo.png">
+      <LogicalName>amazon_logo</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Hulu_logo.png">
+      <LogicalName>hulu_logo</LogicalName>
+    </EmbeddedResource>
+    <EmbeddedResource Include="YouTube_logo.png">
+      <LogicalName>youtube_logo</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="gtk-gui\generated.cs" />

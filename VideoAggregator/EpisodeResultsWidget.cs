@@ -45,6 +45,7 @@ namespace VideoAggregator
 						img.Pixbuf = season.episodes[curEpisode].thumb;
 
 					Gtk.Label lbl = new Gtk.Label ((curEpisode+1).ToString() + ". " + season.episodes[curEpisode].title);
+					lbl.ModifyFont (Pango.FontDescription.FromString("12"));
 					Gtk.VBox box = new Gtk.VBox ();
 					box.Add (img);
 					box.Add (lbl);

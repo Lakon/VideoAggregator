@@ -47,6 +47,7 @@ namespace VideoAggregator
 
 			Gtk.Label lbl = new Gtk.Label (desc);
 			lbl.LineWrap = true;
+			lbl.ModifyFont (Pango.FontDescription.FromString("12"));
 			lbl.WidthRequest = 600;
 			Gtk.VBox box = new Gtk.VBox ();
 			box.Add (img);
@@ -98,9 +99,16 @@ namespace VideoAggregator
 						break;
 
 					Gtk.Image img = new Gtk.Image();
+					if (srcs [curSource] == "Hulu")
+						img.Pixbuf = MainWindow.huluLogo;
+					else if ((srcs[curSource] == "Amazon"))
+						img.Pixbuf = MainWindow.amazonLogo;
+					else if ((srcs[curSource] == "YouTube"))
+						img.Pixbuf = MainWindow.youtubeLogo;
 
 
 					Gtk.Label lbl = new Gtk.Label (srcs[curSource]);
+					lbl.ModifyFont (Pango.FontDescription.FromString("12"));
 					Gtk.VBox box = new Gtk.VBox ();
 					box.Add (img);
 					box.Add (lbl);

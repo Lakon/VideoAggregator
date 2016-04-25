@@ -10,8 +10,13 @@ namespace VideoAggregator
 {
 	public partial class MainWindow: Gtk.Window
 	{
+		public static Gdk.Pixbuf huluLogo;
+		public static Gdk.Pixbuf amazonLogo;
+		public static Gdk.Pixbuf youtubeLogo;
+
 		public const int maxShows = 1000;
 		private const int maxShowsInEmbeddedWidget = 25;
+
 
 		private EmbeddedWidget embeddedWidget;
 		private Stack<EmbeddedWidget> previousWidgets;
@@ -43,10 +48,24 @@ namespace VideoAggregator
 			searchButton.Sensitive = false;
 			previousWidgets = new Stack<EmbeddedWidget> ();
 			errorLabel = new Gtk.Label ();
+			errorLabel.ModifyFont (Pango.FontDescription.FromString("12"));
+
 
 			//load the loading animation
 			using (Stream imgStream = GetType ().Assembly.GetManifestResourceStream ("loadingAnimation")) { 
 				loadingAnimation = new Gdk.PixbufAnimation(imgStream);
+			}
+
+			using (Stream imgStream = GetType ().Assembly.GetManifestResourceStream ("hulu_logo")) { 
+				huluLogo = new Gdk.Pixbuf(imgStream);
+			}
+
+			using (Stream imgStream = GetType ().Assembly.GetManifestResourceStream ("amazon_logo")) { 
+				amazonLogo = new Gdk.Pixbuf(imgStream);
+			}
+
+			using (Stream imgStream = GetType ().Assembly.GetManifestResourceStream ("youtube_logo")) { 
+				youtubeLogo = new Gdk.Pixbuf(imgStream);
 			}
 
 			//make a new CancellationSource for a new task
@@ -75,7 +94,9 @@ namespace VideoAggregator
 			Gtk.Image img = new Gtk.Image (loadingAnimation);
 			table.Attach (img, 2, 4, 2, 3);
 
-			table.Attach (new Gtk.Label (message), 2, 4, 3, 4);
+			Gtk.Label lbl = new Gtk.Label (message);
+			lbl.ModifyFont (Pango.FontDescription.FromString("12"));
+			table.Attach (lbl, 2, 4, 3, 4);
 
 			container.PackStart(table);
 			this.ShowAll ();
@@ -276,19 +297,47 @@ namespace VideoAggregator
 			foreach (string url in urls) {
 				Console.WriteLine (url);
 			}
-
 			if (source == "Hulu") {
 
 				//minimize and launch Firefox
-				this.Iconify ();
-				System.Diagnostics.Process.Start ("/Applications/Firefox.app/Contents/MacOS/Firefox", urls [0]);
+				try{
+					System.Diagnostics.Process.Start("/usr/bin/firefox" , urls [0]);
+
+				}catch (System.ComponentModel.Win32Exception){
+					try{
+						System.Diagnostics.Process.Start ("/Applications/Firefox.app/Contents/MacOS/Firefox", urls [0]);
+
+					}catch(System.ComponentModel.Win32Exception){
+						try{
+							System.Diagnostics.Process.Start ("firefox.exe", urls [0]);
+
+						}catch(System.ComponentModel.Win32Exception){
+							outputError ("Can't open browser.\n" + urls [0]);
+						}
+					}
+				}
+
 
 			} 
 			else {
 
 				//minimize and launch Chrome
-				this.Iconify();
-				System.Diagnostics.Process.Start ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", urls [0]);
+				try{
+					System.Diagnostics.Process.Start("/usr/bin/chrome" , urls [0]);
+
+				}catch (System.ComponentModel.Win32Exception){
+					try{
+						System.Diagnostics.Process.Start ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", urls [0]);
+
+					}catch(System.ComponentModel.Win32Exception){
+						try{
+							System.Diagnostics.Process.Start ("chrome.exe", urls [0]);
+
+						}catch(System.ComponentModel.Win32Exception){
+							outputError ("Can't open browser.\n" + urls [0]);
+						}
+					}
+				}
 
 			}
 		}
@@ -489,11 +538,6 @@ namespace VideoAggregator
 
 			// Destroy the dialog
 			about.Destroy();
-		}
-
-		protected void OnBrowserSetUpSelected (object sender, EventArgs e)
-		{
-
 		}
 	}
 }
