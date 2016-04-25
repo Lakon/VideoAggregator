@@ -6,13 +6,17 @@ namespace VideoAggregator
 	public class SeasonResultsWidget : EmbeddedWidget
 	{
 		private Show show;
-		public SeasonResultsWidget (MainWindow parent, Show show) : base()
+		public SeasonResultsWidget (MainWindow parent, Show show, int start) : base()
 		{
 			this.parent = parent;
 			this.show = show;
+			this.start = start;
 
 			this.Build ();
 			this.ShowAll ();
+
+			if (show.numOfSeasons <= start + 25)
+				loadMoreButton.Destroy ();
 
 			Console.WriteLine ("SeasonResultsWidget Created");
 		}
@@ -28,21 +32,22 @@ namespace VideoAggregator
 		}
 
 		protected void populateTable(){
-			int curSeason = 1;
+			int curSeason = start;
 			for (uint i = 0; i < 5; i++) {
-				if (curSeason > show.numOfSeasons)
+				if (curSeason >= show.numOfSeasons)
 					break;
 
 				for (uint j = 0; j < 5; j++) {
-					if (curSeason > show.numOfSeasons)
+					if (curSeason >= show.numOfSeasons)
 						break;
 
 					Gtk.Image img = new Gtk.Image();
 					if (show.thumb != null)
 						img.Pixbuf = show.thumb;
 
-					Gtk.Label lbl = new Gtk.Label ("Season " + curSeason.ToString());
+					Gtk.Label lbl = new Gtk.Label ("Season " + (curSeason+1).ToString());
 					lbl.ModifyFont (Pango.FontDescription.FromString("12"));
+
 					Gtk.VBox box = new Gtk.VBox ();
 					box.Add (img);
 					box.Add (lbl);
@@ -69,6 +74,11 @@ namespace VideoAggregator
 		protected void OnSeasonSelected (object o, Gtk.ButtonPressEventArgs args, int season)
 		{
 			parent.seasonSelected (this.show, season);
+		}
+
+		protected override void OnLoadMoreClicked (object sender, EventArgs e)
+		{
+			parent.loadMoreResults (new SeasonResultsWidget (parent, show, start + 25));
 		}
 	}
 }

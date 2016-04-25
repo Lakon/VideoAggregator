@@ -6,14 +6,17 @@ namespace VideoAggregator
 	public class EpisodeResultsWidget : EmbeddedWidget
 	{
 		private Season season;
-		public EpisodeResultsWidget (MainWindow parent, Season season) : base()
+		public EpisodeResultsWidget (MainWindow parent, Season season, int start) : base()
 		{
 			this.parent = parent;
 			this.season = season;
+			this.start = start;
 
 			this.Build ();
 			this.ShowAll ();
 
+			if (season.episodes.Count <= start + 25)
+				loadMoreButton.Destroy ();
 			Console.WriteLine ("EpisodeResultsWindow Created");
 		}
 
@@ -28,7 +31,7 @@ namespace VideoAggregator
 		}
 
 		protected void populateTable(){
-			int curEpisode = 0;
+			int curEpisode = start;
 			for (uint i = 0; i < 5; i++) {
 				if (curEpisode >= season.episodes.Count)
 					break;
@@ -61,8 +64,6 @@ namespace VideoAggregator
 					table.Attach (eventbox, j, j + 1, i, i + 1);
 
 					curEpisode++;
-					if (curEpisode >= season.episodes.Count)
-						break;
 				}
 			}
 		}
@@ -70,6 +71,11 @@ namespace VideoAggregator
 		protected void OnEpisodeSelected (object o, Gtk.ButtonPressEventArgs args, Episode ep)
 		{
 			parent.episodeSelected (ep);
+		}
+
+		protected override void OnLoadMoreClicked (object sender, EventArgs e)
+		{
+			parent.loadMoreResults (new EpisodeResultsWidget (parent, season, start + 25));
 		}
 	}
 }

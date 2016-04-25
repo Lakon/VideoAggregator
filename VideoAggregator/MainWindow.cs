@@ -14,6 +14,10 @@ namespace VideoAggregator
 		public static Gdk.Pixbuf amazonLogo;
 		public static Gdk.Pixbuf youtubeLogo;
 
+		public const int maxShows = 1000;
+		private const int maxShowsInEmbeddedWidget = 25;
+
+
 		private EmbeddedWidget embeddedWidget;
 		private Stack<EmbeddedWidget> previousWidgets;
 		private Gtk.Label errorLabel;
@@ -68,42 +72,7 @@ namespace VideoAggregator
 			loadingResultsCancellationSource = new CancellationTokenSource ();
 
 			showLoadingScreen();
-			var cancelToken = loadingResultsCancellationSource.Token;
-
-			//Create the task that gets the results from guidebox
-			Task task = new Task(() => {
-				cancelToken.ThrowIfCancellationRequested();
-
-				//get the data from guidebox
-				List<Show> shows = GuideBoxAPIWrapper.getTVShowIds (0, 25, Source.All);
-
-				cancelToken.ThrowIfCancellationRequested();
-
-				//populate the thumbnails
-				foreach(var show in shows){
-					byte[] thumbNail = getThumbNail(show.thumbURL);
-					if (thumbNail != null)
-						show.thumb = new Gdk.Pixbuf(thumbNail);
-				}
-
-				cancelToken.ThrowIfCancellationRequested();
-
-				//show the results
-				Gtk.Application.Invoke (delegate {
-					embeddedWidget = new ShowResultsWidget (this, shows);
-					clearContainer();
-					this.container.Add (embeddedWidget);
-				} );
-			},cancelToken);
-
-			//create the delegate to handle exceptions
-			task.ContinueWith((t) => {
-				Gtk.Application.Invoke (delegate {
-					outputError (t.Exception.InnerException.Message);
-				});
-			}, TaskContinuationOptions.OnlyOnFaulted);
-
-			task.Start();
+			getPopShows (0);
 
 			this.ShowAll ();
 		}
@@ -129,7 +98,7 @@ namespace VideoAggregator
 			lbl.ModifyFont (Pango.FontDescription.FromString("12"));
 			table.Attach (lbl, 2, 4, 3, 4);
 
-			container.Add(table);
+			container.PackStart(table);
 			this.ShowAll ();
 		}
 
@@ -169,8 +138,25 @@ namespace VideoAggregator
 			clearContainer ();
 
 			errorLabel.Text = errorMessage;
-			this.container.Add (errorLabel);
+			this.container.PackStart (errorLabel);
 			this.ShowAll ();
+		}
+
+		public void addEmbeddedWidgetToContainer(){
+			clearContainer ();
+			this.container.PackStart (embeddedWidget);
+		}
+
+		public void loadMoreResults(EmbeddedWidget result){
+			Console.WriteLine ("loadmore search");
+			clearContainer ();
+			embeddedWidget = result;
+			this.container.PackStart (embeddedWidget);
+		}
+		public void loadMorePopShows(int start){
+			Console.WriteLine ("loadmore pop");
+			showLoadingScreen ("Loading more shows");
+			getPopShows (start);
 		}
 
 		public void showSelected(Show show){
@@ -193,8 +179,7 @@ namespace VideoAggregator
 					//show the results
 					Gtk.Application.Invoke (delegate {
 						embeddedWidget = new SourcesWidget (this, show.desc, show.thumb, sources, activeSource);
-						clearContainer ();
-						this.container.Add (embeddedWidget);
+						addEmbeddedWidgetToContainer();
 					});
 				}
 				else{
@@ -205,9 +190,8 @@ namespace VideoAggregator
 
 					//show the results
 					Gtk.Application.Invoke (delegate {
-						embeddedWidget = new SeasonResultsWidget (this, show);
-						clearContainer ();
-						this.container.Add (embeddedWidget);
+						embeddedWidget = new SeasonResultsWidget (this, show, 0);
+						addEmbeddedWidgetToContainer();
 					});
 				}
 			}, cancelToken);
@@ -225,7 +209,7 @@ namespace VideoAggregator
 
 
 		public void seasonSelected(Show show, int s){
-			showLoadingScreen ("Loading Season " + s.ToString() + " of " + show.title);
+			showLoadingScreen ("Loading Season " + (s+1).ToString() + " of " + show.title);
 
 			//make a new CancellationSource for a new task
 			loadingResultsCancellationSource = new CancellationTokenSource ();
@@ -237,7 +221,7 @@ namespace VideoAggregator
 
 				//get the results from guidebox
 				Season season = new Season(s.ToString());
-				season.episodes = GuideBoxAPIWrapper.getTVShowEpisodes (show.id, s.ToString());
+				season.episodes = GuideBoxAPIWrapper.getTVShowEpisodes (show.id, (s+1).ToString());
 
 				cancelToken.ThrowIfCancellationRequested();
 
@@ -256,9 +240,8 @@ namespace VideoAggregator
 						outputError("No available episodes");
 						return;
 					}
-					embeddedWidget = new EpisodeResultsWidget (this, season);
-					clearContainer ();
-					this.container.Add (embeddedWidget);
+					embeddedWidget = new EpisodeResultsWidget (this, season, 0);
+					addEmbeddedWidgetToContainer();
 				});
 			}, cancelToken);
 
@@ -293,8 +276,7 @@ namespace VideoAggregator
 				Gtk.Application.Invoke (delegate {
 					embeddedWidget = new SourcesWidget (this, episode.desc, episode.thumb, sources, activeSource);
 
-					clearContainer ();
-					this.container.Add (embeddedWidget);
+					addEmbeddedWidgetToContainer();
 				});
 			}, cancelToken);
 
@@ -365,6 +347,60 @@ namespace VideoAggregator
 			}
 		}
 
+		protected void getPopShows(int start){
+			//make a new CancellationSource for a new task
+			loadingResultsCancellationSource = new CancellationTokenSource ();
+			var cancelToken = loadingResultsCancellationSource.Token;
+
+			//Create the task that gets the results from guidebox
+			Task task = new Task(() => {
+				cancelToken.ThrowIfCancellationRequested();
+				List<Show> shows = new List<Show>();
+				if (showRadioButton.Active){
+					//get the results from guidebox
+					shows = GuideBoxAPIWrapper.getTVShowIds (start, maxShowsInEmbeddedWidget, activeSource);
+
+					cancelToken.ThrowIfCancellationRequested();
+
+					//populate the thumbnails
+					foreach(var show in shows){
+						byte[] thumbNail = getThumbNail(show.thumbURL);
+						if (thumbNail != null)
+							show.thumb = new Gdk.Pixbuf(thumbNail);
+					}
+				}
+				else{
+					//get the results from guidebox
+					shows = GuideBoxAPIWrapper.getMovieIds (start, maxShowsInEmbeddedWidget, activeSource);
+
+					cancelToken.ThrowIfCancellationRequested();
+
+					//populate the thumbnails
+					foreach(var show in shows){
+						byte[] thumbNail = getThumbNail(show.thumbURL);
+						if (thumbNail != null)
+							show.thumb = new Gdk.Pixbuf(thumbNail);
+					}
+				}
+				cancelToken.ThrowIfCancellationRequested();
+
+				//show the results
+				Gtk.Application.Invoke (delegate {
+					embeddedWidget = new ShowResultsWidget (this, shows, start, false);
+					addEmbeddedWidgetToContainer();
+				});
+			}, cancelToken);
+
+			//create the delegate to handle exceptions
+			task.ContinueWith((t) => {
+				Gtk.Application.Invoke (delegate {
+					outputError (t.Exception.InnerException.Message);
+				});
+			}, TaskContinuationOptions.OnlyOnFaulted);
+
+			task.Start();
+		}
+
 		protected void OnDeleteEvent (object sender, Gtk.DeleteEventArgs a){
 			//cancel any task that might be running
 			loadingResultsCancellationSource.Cancel ();
@@ -386,7 +422,7 @@ namespace VideoAggregator
 
 				updateBackButton ();
 
-				container.Add (embeddedWidget);
+				container.PackStart (embeddedWidget);
 			}
 		}
 
@@ -446,9 +482,8 @@ namespace VideoAggregator
 
 				//show the results
 				Gtk.Application.Invoke (delegate {
-					embeddedWidget = new ShowResultsWidget (this, shows);
-					clearContainer ();
-					this.container.Add (embeddedWidget);
+					embeddedWidget = new ShowResultsWidget (this, shows, 0, true);
+					addEmbeddedWidgetToContainer();
 				});
 			}, cancelToken);
 
@@ -474,63 +509,14 @@ namespace VideoAggregator
 				msg = "Searching for Popular Movies";
 			showLoadingScreen(msg);
 
-			//make a new CancellationSource for a new task
-			loadingResultsCancellationSource = new CancellationTokenSource ();
-			var cancelToken = loadingResultsCancellationSource.Token;
+			getPopShows (0);
 
-			//Create the task that gets the results from guidebox
-			Task task = new Task(() => {
-				cancelToken.ThrowIfCancellationRequested();
-				List<Show> shows = new List<Show>();
-				if (showRadioButton.Active){
-					//get the results from guidebox
-					shows = GuideBoxAPIWrapper.getTVShowIds (0, 25, activeSource);
-
-					cancelToken.ThrowIfCancellationRequested();
-
-					//populate the thumbnails
-					foreach(var show in shows){
-						byte[] thumbNail = getThumbNail(show.thumbURL);
-						if (thumbNail != null)
-							show.thumb = new Gdk.Pixbuf(thumbNail);
-					}
-				}
-				else{
-					//get the results from guidebox
-					shows = GuideBoxAPIWrapper.getMovieIds (0, 25, activeSource);
-
-					cancelToken.ThrowIfCancellationRequested();
-
-					//populate the thumbnails
-					foreach(var show in shows){
-						byte[] thumbNail = getThumbNail(show.thumbURL);
-						if (thumbNail != null)
-							show.thumb = new Gdk.Pixbuf(thumbNail);
-					}
-				}
-				cancelToken.ThrowIfCancellationRequested();
-
-				//show the results
-				Gtk.Application.Invoke (delegate {
-					embeddedWidget = new ShowResultsWidget (this, shows);
-					clearContainer ();
-					this.container.Add (embeddedWidget);
-				});
-			}, cancelToken);
-
-			//create the delegate to handle exceptions
-			task.ContinueWith((t) => {
-				Gtk.Application.Invoke (delegate {
-					outputError (t.Exception.InnerException.Message);
-				});
-			}, TaskContinuationOptions.OnlyOnFaulted);
-
-			task.Start();
 		}
 
 		protected void OnSourceChanged (object sender, EventArgs e)
 		{
-			embeddedWidget.OnSourceChanged (activeSource);
+			if (embeddedWidget != null)
+				embeddedWidget.OnSourceChanged (activeSource);
 		}
 
 		protected void OnSearchEntryChanged (object sender, EventArgs e)

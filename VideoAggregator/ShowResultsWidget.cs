@@ -7,13 +7,21 @@ namespace VideoAggregator
 	public class ShowResultsWidget : EmbeddedWidget
 	{
 		private List<Show> shows;
-		public ShowResultsWidget (MainWindow parent, List<Show> shows) : base()
+		private bool isSearch;
+		public ShowResultsWidget (MainWindow parent, List<Show> shows, int start, bool isSearch) : base()
 		{
 			this.parent = parent;
 			this.shows = shows;
+			this.start = start;
+			this.isSearch = isSearch;
+
+				
 
 			this.Build ();
 			this.ShowAll ();
+
+			if ((shows.Count <= start + 25 && isSearch) || start + 25 > MainWindow.maxShows)
+				loadMoreButton.Destroy();
 
 			Console.WriteLine ("ShowResultsWidget Created");
 		}
@@ -29,7 +37,12 @@ namespace VideoAggregator
 		}
 
 		protected void populateTable(){
-			int curShow = 0;
+			int curShow;
+			if (isSearch)
+				curShow = start;
+			else
+				curShow = 0;
+			
 			for (uint i = 0; i < 5; i++) {
 				if (curShow >= shows.Count)
 					break;
@@ -64,6 +77,7 @@ namespace VideoAggregator
 					curShow++;
 				}
 			}
+
 		}
 
 		protected void OnShowSelected (object o, Gtk.ButtonPressEventArgs args, Show show)
@@ -71,7 +85,15 @@ namespace VideoAggregator
 			parent.showSelected (show);
 		}
 
-
+		protected override void OnLoadMoreClicked (object sender, EventArgs e)
+		{
+			if (isSearch) {
+				parent.loadMoreResults (new ShowResultsWidget (parent, shows, start + 25, true));
+			} 
+			else {
+				parent.loadMorePopShows (start + 25);
+			}
+		}
 	}
 }
 
