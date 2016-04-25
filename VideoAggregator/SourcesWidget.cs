@@ -21,6 +21,7 @@ namespace VideoAggregator
 
 			this.Build ();
 			this.ShowAll ();
+			this.loadMoreButton.Destroy ();
 
 			Console.WriteLine ("SourcesWidget Created");
 		}
@@ -58,10 +59,7 @@ namespace VideoAggregator
 			this.table.Name = "table";
 			this.table.RowSpacing = ((uint)(1));
 			this.table.ColumnSpacing = ((uint)(6));
-			Gtk.Viewport w1 = new Gtk.Viewport ();
-			w1.ShadowType = ((Gtk.ShadowType)(0));
-			w1.Add (this.table);
-			scrolledwindow.Add  (w1);
+			this.showContainer.PackStart (this.table);
 		}
 
 		protected void populateTable(){

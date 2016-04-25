@@ -107,7 +107,7 @@ YouTube</property>
                 <child>
                   <widget class="Gtk.VBox" id="vbox2">
                     <property name="MemberName" />
-                    <property name="Spacing">6</property>
+                    <property name="Spacing">1</property>
                     <child>
                       <widget class="Gtk.RadioButton" id="showRadioButton">
                         <property name="MemberName" />

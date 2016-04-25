@@ -115,7 +115,7 @@ namespace VideoAggregator
 			// Container child hbox3.Gtk.Box+BoxChild
 			this.vbox2 = new global::Gtk.VBox ();
 			this.vbox2.Name = "vbox2";
-			this.vbox2.Spacing = 6;
+			this.vbox2.Spacing = 1;
 			// Container child vbox2.Gtk.Box+BoxChild
 			this.showRadioButton = new global::Gtk.RadioButton (global::Mono.Unix.Catalog.GetString ("Show"));
 			this.showRadioButton.CanFocus = true;
