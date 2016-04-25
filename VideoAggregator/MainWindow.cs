@@ -320,16 +320,17 @@ namespace VideoAggregator
 				//minimize and launch Firefox
 				try{
 				this.Iconify();	
-				System.Diagnostics.Process.Start("/usr/bin/firefox" , urls [0]);
+				
+					System.Diagnostics.Process.Start ("/Applications/Firefox.app/Contents/MacOS/Firefox", urls [0]);
 
 				}catch (System.ComponentModel.Win32Exception){
 					try{
 						this.Iconify();
-						System.Diagnostics.Process.Start ("/Applications/Firefox.app/Contents/MacOS/Firefox", urls [0]);
+						System.Diagnostics.Process.Start("/usr/bin/firefox" , urls [0]);
 
 					}catch(System.ComponentModel.Win32Exception){
 						try{
-							this.Iconify();
+							
 							System.Diagnostics.Process.Start ("firefox.exe", urls [0]);
 
 						}catch(System.ComponentModel.Win32Exception){
@@ -345,16 +346,14 @@ namespace VideoAggregator
 				//minimize and launch Chrome
 				try{
 				this.Iconify();
-					System.Diagnostics.Process.Start("/usr/bin/chrome" , urls [0]);
-
+					System.Diagnostics.Process.Start ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", urls [0]);
 				}catch (System.ComponentModel.Win32Exception){
 					try{
 						this.Iconify();
-						System.Diagnostics.Process.Start ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", urls [0]);
-
+						System.Diagnostics.Process.Start("/usr/bin/chrome" , urls [0]);
 					}catch(System.ComponentModel.Win32Exception){
 						try{
-							this.Iconify();
+							
 							System.Diagnostics.Process.Start ("chrome.exe", urls [0]);
 
 						}catch(System.ComponentModel.Win32Exception){
