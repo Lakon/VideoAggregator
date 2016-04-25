@@ -10,6 +10,10 @@ namespace VideoAggregator
 {
 	public partial class MainWindow: Gtk.Window
 	{
+		public static Gdk.Pixbuf huluLogo;
+		public static Gdk.Pixbuf amazonLogo;
+		public static Gdk.Pixbuf youtubeLogo;
+
 		private EmbeddedWidget embeddedWidget;
 		private Stack<EmbeddedWidget> previousWidgets;
 		private Gtk.Label errorLabel;
@@ -44,6 +48,18 @@ namespace VideoAggregator
 			//load the loading animation
 			using (Stream imgStream = GetType ().Assembly.GetManifestResourceStream ("loadingAnimation")) { 
 				loadingAnimation = new Gdk.PixbufAnimation(imgStream);
+			}
+
+			using (Stream imgStream = GetType ().Assembly.GetManifestResourceStream ("hulu_logo")) { 
+				huluLogo = new Gdk.Pixbuf(imgStream);
+			}
+
+			using (Stream imgStream = GetType ().Assembly.GetManifestResourceStream ("amazon_logo")) { 
+				amazonLogo = new Gdk.Pixbuf(imgStream);
+			}
+
+			using (Stream imgStream = GetType ().Assembly.GetManifestResourceStream ("youtube_logo")) { 
+				youtubeLogo = new Gdk.Pixbuf(imgStream);
 			}
 
 			//make a new CancellationSource for a new task

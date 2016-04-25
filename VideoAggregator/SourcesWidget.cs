@@ -100,6 +100,12 @@ namespace VideoAggregator
 						break;
 
 					Gtk.Image img = new Gtk.Image();
+					if (srcs [curSource] == "Hulu")
+						img.Pixbuf = MainWindow.huluLogo;
+					else if ((srcs[curSource] == "Amazon"))
+						img.Pixbuf = MainWindow.amazonLogo;
+					else if ((srcs[curSource] == "YouTube"))
+						img.Pixbuf = MainWindow.youtubeLogo;
 
 
 					Gtk.Label lbl = new Gtk.Label (srcs[curSource]);
