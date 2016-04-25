@@ -169,6 +169,7 @@ YouTube</property>
                     <property name="IsEditable">True</property>
                     <property name="InvisibleChar">●</property>
                     <signal name="Changed" handler="OnSearchEntryChanged" />
+                    <signal name="Activated" handler="OnSearchButtonClicked" />
                   </widget>
                   <packing>
                     <property name="Position">0</property>

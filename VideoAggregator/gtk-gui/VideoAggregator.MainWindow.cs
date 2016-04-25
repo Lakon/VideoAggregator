@@ -194,6 +194,7 @@ namespace VideoAggregator
 			this.sourceComboBox.Changed += new global::System.EventHandler (this.OnSourceChanged);
 			this.popularButton.Clicked += new global::System.EventHandler (this.OnPopButtonClicked);
 			this.searchEntry.Changed += new global::System.EventHandler (this.OnSearchEntryChanged);
+			this.searchEntry.Activated += new global::System.EventHandler (this.OnSearchButtonClicked);
 			this.searchButton.Clicked += new global::System.EventHandler (this.OnSearchButtonClicked);
 		}
 	}
