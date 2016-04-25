@@ -140,7 +140,7 @@ namespace VideoAggregator
 
 		public override void OnSourceChanged(Source activeSource){
 			this.activeSource = activeSource;
-			scrolledwindow.Child.Destroy ();
+			showContainer.Remove (table);
 			initTable ();
 			populateTable ();
 			this.ShowAll ();
