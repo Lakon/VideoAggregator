@@ -42,6 +42,7 @@ namespace VideoAggregator
 						img.Pixbuf = show.thumb;
 
 					Gtk.Label lbl = new Gtk.Label ("Season " + curSeason.ToString());
+					lbl.ModifyFont (Pango.FontDescription.FromString("12"));
 					Gtk.VBox box = new Gtk.VBox ();
 					box.Add (img);
 					box.Add (lbl);

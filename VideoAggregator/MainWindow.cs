@@ -44,6 +44,8 @@ namespace VideoAggregator
 			searchButton.Sensitive = false;
 			previousWidgets = new Stack<EmbeddedWidget> ();
 			errorLabel = new Gtk.Label ();
+			errorLabel.ModifyFont (Pango.FontDescription.FromString("12"));
+
 
 			//load the loading animation
 			using (Stream imgStream = GetType ().Assembly.GetManifestResourceStream ("loadingAnimation")) { 
@@ -123,7 +125,9 @@ namespace VideoAggregator
 			Gtk.Image img = new Gtk.Image (loadingAnimation);
 			table.Attach (img, 2, 4, 2, 3);
 
-			table.Attach (new Gtk.Label (message), 2, 4, 3, 4);
+			Gtk.Label lbl = new Gtk.Label (message);
+			lbl.ModifyFont (Pango.FontDescription.FromString("12"));
+			table.Attach (lbl, 2, 4, 3, 4);
 
 			container.Add(table);
 			this.ShowAll ();

@@ -46,6 +46,7 @@ namespace VideoAggregator
 
 			Gtk.Label lbl = new Gtk.Label (desc);
 			lbl.LineWrap = true;
+			lbl.ModifyFont (Pango.FontDescription.FromString("12"));
 			lbl.WidthRequest = 600;
 			Gtk.VBox box = new Gtk.VBox ();
 			box.Add (img);
@@ -109,6 +110,7 @@ namespace VideoAggregator
 
 
 					Gtk.Label lbl = new Gtk.Label (srcs[curSource]);
+					lbl.ModifyFont (Pango.FontDescription.FromString("12"));
 					Gtk.VBox box = new Gtk.VBox ();
 					box.Add (img);
 					box.Add (lbl);

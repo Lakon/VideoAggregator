@@ -43,6 +43,7 @@ namespace VideoAggregator
 						img.Pixbuf = shows[curShow].thumb;
 
 					Gtk.Label lbl = new Gtk.Label (shows[curShow].title);
+					lbl.ModifyFont (Pango.FontDescription.FromString("12"));
 					Gtk.VBox box = new Gtk.VBox ();
 					box.Add (img);
 					box.Add (lbl);
