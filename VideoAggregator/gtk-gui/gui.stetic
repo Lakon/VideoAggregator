@@ -9,17 +9,6 @@
   </import>
   <widget class="Gtk.Window" id="VideoAggregator.MainWindow" design-size="673 533">
     <action-group name="Default">
-      <action id="OptionsAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">Options</property>
-        <property name="ShortLabel" translatable="yes">Options</property>
-      </action>
-      <action id="BrowserSetUpAction">
-        <property name="Type">Action</property>
-        <property name="Label" translatable="yes">Browser Set Up</property>
-        <property name="ShortLabel" translatable="yes">Browser Set Up</property>
-        <signal name="Activated" handler="OnBrowserSetUpSelected" />
-      </action>
       <action id="HelpAction">
         <property name="Type">Action</property>
         <property name="Label" translatable="yes">Help</property>
@@ -44,9 +33,6 @@
           <widget class="Gtk.MenuBar" id="menubar">
             <property name="MemberName" />
             <node name="menubar" type="Menubar">
-              <node type="Menu" action="OptionsAction">
-                <node type="Menuitem" action="BrowserSetUpAction" />
-              </node>
               <node type="Menu" action="HelpAction">
                 <node type="Menuitem" action="AboutAction" />
               </node>

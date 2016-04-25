@@ -6,10 +6,6 @@ namespace VideoAggregator
 	{
 		private global::Gtk.UIManager UIManager;
 		
-		private global::Gtk.Action OptionsAction;
-		
-		private global::Gtk.Action BrowserSetUpAction;
-		
 		private global::Gtk.Action HelpAction;
 		
 		private global::Gtk.Action AboutAction;
@@ -46,12 +42,6 @@ namespace VideoAggregator
 			// Widget VideoAggregator.MainWindow
 			this.UIManager = new global::Gtk.UIManager ();
 			global::Gtk.ActionGroup w1 = new global::Gtk.ActionGroup ("Default");
-			this.OptionsAction = new global::Gtk.Action ("OptionsAction", global::Mono.Unix.Catalog.GetString ("Options"), null, null);
-			this.OptionsAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Options");
-			w1.Add (this.OptionsAction, null);
-			this.BrowserSetUpAction = new global::Gtk.Action ("BrowserSetUpAction", global::Mono.Unix.Catalog.GetString ("Browser Set Up"), null, null);
-			this.BrowserSetUpAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Browser Set Up");
-			w1.Add (this.BrowserSetUpAction, null);
 			this.HelpAction = new global::Gtk.Action ("HelpAction", global::Mono.Unix.Catalog.GetString ("Help"), null, null);
 			this.HelpAction.ShortLabel = global::Mono.Unix.Catalog.GetString ("Help");
 			w1.Add (this.HelpAction, null);
@@ -68,7 +58,8 @@ namespace VideoAggregator
 			this.container.Name = "container";
 			this.container.Spacing = 6;
 			// Container child container.Gtk.Box+BoxChild
-			this.UIManager.AddUiFromString (@"<ui><menubar name='menubar'><menu name='OptionsAction' action='OptionsAction'><menuitem name='BrowserSetUpAction' action='BrowserSetUpAction'/></menu><menu name='HelpAction' action='HelpAction'><menuitem name='AboutAction' action='AboutAction'/></menu></menubar></ui>");
+			this.UIManager.AddUiFromString ("<ui><menubar name=\'menubar\'><menu name=\'HelpAction\' action=\'HelpAction\'><menuitem" +
+			" name=\'AboutAction\' action=\'AboutAction\'/></menu></menubar></ui>");
 			this.menubar = ((global::Gtk.MenuBar)(this.UIManager.GetWidget ("/menubar")));
 			this.menubar.Name = "menubar";
 			this.container.Add (this.menubar);
@@ -198,7 +189,6 @@ namespace VideoAggregator
 			this.DefaultHeight = 533;
 			this.Show ();
 			this.DeleteEvent += new global::Gtk.DeleteEventHandler (this.OnDeleteEvent);
-			this.BrowserSetUpAction.Activated += new global::System.EventHandler (this.OnBrowserSetUpSelected);
 			this.AboutAction.Activated += new global::System.EventHandler (this.OnAboutSelected);
 			this.backButton.Clicked += new global::System.EventHandler (this.OnBackButtonClicked);
 			this.sourceComboBox.Changed += new global::System.EventHandler (this.OnSourceChanged);

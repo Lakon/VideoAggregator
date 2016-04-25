@@ -534,10 +534,5 @@ namespace VideoAggregator
 			// Destroy the dialog
 			about.Destroy();
 		}
-
-		protected void OnBrowserSetUpSelected (object sender, EventArgs e)
-		{
-
-		}
 	}
 }
