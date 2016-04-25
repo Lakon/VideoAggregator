@@ -510,7 +510,8 @@ namespace VideoAggregator
 
 		protected void OnSourceChanged (object sender, EventArgs e)
 		{
-			embeddedWidget.OnSourceChanged (activeSource);
+			if (embeddedWidget != null)
+				embeddedWidget.OnSourceChanged (activeSource);
 		}
 
 		protected void OnSearchEntryChanged (object sender, EventArgs e)
