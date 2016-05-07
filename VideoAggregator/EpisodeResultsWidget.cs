@@ -17,7 +17,6 @@ namespace VideoAggregator
 
 			if (season.episodes.Count <= start + 25)
 				loadMoreButton.Destroy ();
-			Console.WriteLine ("EpisodeResultsWindow Created");
 		}
 
 		protected new void Build ()

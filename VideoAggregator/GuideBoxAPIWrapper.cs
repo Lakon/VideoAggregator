@@ -37,7 +37,7 @@ namespace VideoAggregator{
 			int counter = 0;
 
 			while (!gotResult){
-				Console.WriteLine ("Web request " + counter.ToString());
+				System.Diagnostics.Debug.WriteLine ("Web request " + counter.ToString());
 				HttpWebRequest request = (HttpWebRequest) WebRequest.Create(url);
 				HttpWebResponse response = (HttpWebResponse) request.GetResponse();
 				if (response.StatusCode == HttpStatusCode.OK && response.ContentLength > 0) {
@@ -54,7 +54,7 @@ namespace VideoAggregator{
 					throw new WebException ("Server response timed out");
 			}
 
-			//Console.WriteLine (url);
+			//System.Diagnostics.Debug.WriteLine (url);
 			return text;
 		}
 

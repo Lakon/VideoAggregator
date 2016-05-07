@@ -23,7 +23,6 @@ namespace VideoAggregator
 			this.ShowAll ();
 			this.loadMoreButton.Destroy ();
 
-			Console.WriteLine ("SourcesWidget Created");
 		}
 
 

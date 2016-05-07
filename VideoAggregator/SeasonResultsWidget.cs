@@ -18,7 +18,6 @@ namespace VideoAggregator
 			if (show.numOfSeasons <= start + 25)
 				loadMoreButton.Destroy ();
 
-			Console.WriteLine ("SeasonResultsWidget Created");
 		}
 
 		protected new void Build ()

@@ -22,8 +22,6 @@ namespace VideoAggregator
 
 			if ((shows.Count <= start + 25 && isSearch) || start + 25 > MainWindow.maxShows)
 				loadMoreButton.Destroy();
-
-			Console.WriteLine ("ShowResultsWidget Created");
 		}
 
 		protected new void Build ()

@@ -110,8 +110,8 @@ namespace VideoAggregator
 					imageBytes = webClient.DownloadData (url);
 				}
 			}catch(WebException e){
-				Console.WriteLine(url);
-				Console.WriteLine (e);
+				System.Diagnostics.Debug.WriteLine(url);
+				System.Diagnostics.Debug.WriteLine (e);
 				return null;
 			}
 
@@ -129,7 +129,7 @@ namespace VideoAggregator
 				}
 				container.Remove (container.Children [2]);
 			} else if (container.Children.Length > 3) {
-				Console.WriteLine ("Somethings wrong");
+				System.Diagnostics.Debug.WriteLine ("Somethings wrong");
 			}
 		}
 
@@ -148,13 +148,11 @@ namespace VideoAggregator
 		}
 
 		public void loadMoreResults(EmbeddedWidget result){
-			Console.WriteLine ("loadmore search");
 			clearContainer ();
 			embeddedWidget = result;
 			this.container.PackStart (embeddedWidget);
 		}
 		public void loadMorePopShows(int start){
-			Console.WriteLine ("loadmore pop");
 			showLoadingScreen ("Loading more shows");
 			getPopShows (start);
 		}
@@ -293,9 +291,9 @@ namespace VideoAggregator
 		public void sourceSelected(string source, List<string> urls){
 
 
-			Console.WriteLine (source);
+			System.Diagnostics.Debug.WriteLine (source);
 			foreach (string url in urls) {
-				Console.WriteLine (url);
+				System.Diagnostics.Debug.WriteLine (url);
 			}
 			if (source == "Hulu") {
 
