@@ -15,7 +15,7 @@ These make the video aggregator cross-platform.
 
 It uses the [GuideBox API](http://www.guidebox.com/) to get show information/links.
 
-![VideoAggregatorExample](https://github.com/Lakon/VideoAggregator/blob/master/VideoAggregatorExample.png)
+![VideoAggregatorExample](https://github.com/Lakon/VideoAggregator/blob/master/VideoAggregator-example.png)
 
 ### Installation/Build Instructions
 The video aggregator requires [Mono](http://www.mono-project.com/) and [GTK#](http://www.mono-project.com/docs/gui/gtksharp/) 
