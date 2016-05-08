@@ -6,14 +6,16 @@
 * Elizabeth Razo
 
 ### Description
-The video aggregator gets show and movie information/links from sources such as YouTube, Hulu, and Amazon. It simply links 
-through to the source site and doesn't handle any streaming or video playback.
+The video aggregator is a GUI application that gets show and movie information/links from the sources YouTube, Hulu, 
+and Amazon. It simply links through to the source site and doesn't handle any streaming or video playback.
 
 The video aggregator is powered by [Mono](http://www.mono-project.com/), an open source implementation of Microsoft's .NET 
 Framework, and [GTK#](http://www.mono-project.com/docs/gui/gtksharp/), a Graphical User Interface Toolkit for mono and .Net.
 These make the video aggregator cross-platform.
 
 It uses the [GuideBox API](http://www.guidebox.com/) to get show information/links.
+
+![VideoAggregatorExample](https://github.com/Lakon/VideoAggregator/blob/master/VideoAggregatorExample.png)
 
 ### Installation/Build Instructions
 The video aggregator requires [Mono](http://www.mono-project.com/) and [GTK#](http://www.mono-project.com/docs/gui/gtksharp/) 
@@ -27,3 +29,4 @@ The video aggregator was designed to be easy to use. You simply click on buttons
 results. There is a search function and a back function.
 
 When you click on a source a browser will open at the url of the source
+
