@@ -1,17 +1,26 @@
-﻿using System;
+﻿/* EmbeddedWidget.cs
+ * Base class for the classes handling the logic for displaying results
+*/
+
+
+using System;
 
 namespace VideoAggregator
 {
 	//[System.ComponentModel.ToolboxItem (true)]
 	public class EmbeddedWidget : Gtk.Bin
 	{
-		protected MainWindow parent;
+		//gui variables
 		protected Gtk.Table table;
 		protected Gtk.VBox containerVbox;
 		protected Gtk.VBox showContainer;
 		protected Gtk.ScrolledWindow scrolledwindow;
 		protected Gtk.Button loadMoreButton;
 
+		//each embedded widget needs a reference to the mainWindow
+		protected MainWindow parent;
+
+		//this keeps track of where to start in the list of results
 		protected int start;
 
 		public EmbeddedWidget ()
@@ -22,8 +31,8 @@ namespace VideoAggregator
 			//initTable ();
 		}
 
-
-
+		//creating gui elements
+		//most of this is copied straight out of the generated code from the designer
 		protected virtual void Build ()
 		{
 			this.Name = "EmbeddedWidget";
@@ -72,17 +81,16 @@ namespace VideoAggregator
 			this.Hide ();
 		}
 
+		//create a 5 by 5 table and add it to gui
 		protected virtual void initTable(){
 			this.table = new Gtk.Table (((uint)(5)), ((uint)(5)), true);
 			this.table.Name = "table";
 			this.table.RowSpacing = ((uint)(6));
 			this.table.ColumnSpacing = ((uint)(6));
-			//Gtk.Viewport w1 = new Gtk.Viewport ();
-			//w1.ShadowType = ((Gtk.ShadowType)(0));
-			//w1.Add (this.table);
 			this.showContainer.PackStart (this.table);
 		}
 
+		//required by base class Gtk.Bin
 		protected override void OnSizeAllocated (Gdk.Rectangle allocation)
 		{
 			if (this.Child != null)
@@ -91,6 +99,7 @@ namespace VideoAggregator
 			}
 		}
 
+		//required by base class Gtk.Bin
 		protected override void OnSizeRequested (ref Gtk.Requisition requisition)
 		{
 			if (this.Child != null)
@@ -99,7 +108,9 @@ namespace VideoAggregator
 			}
 		}
 
-
+		//Event Handlers for the hover animations
+		//basically just activates an eventbox when the mouse enters an eventbox
+		//and makes it normal once it leaves again
 		protected virtual void OnHoverEnter(object o, Gtk.EnterNotifyEventArgs args, Gtk.EventBox eBox){
 			eBox.State = Gtk.StateType.Selected;
 		}
@@ -107,14 +118,15 @@ namespace VideoAggregator
 			eBox.State = Gtk.StateType.Normal;
 		}
 
+		//Needed for polymorphism
+		//MainWindow calls this from the embeddedWidget and the subclasses of this class
+		//handle the logic if any
 		public virtual void OnSourceChanged(Source activeSource){
 			//nothing by default
 		}
 
-		public virtual void loadMore(){
-			//nothing by default
-		}
-
+		//Event handler for clicking the load more button
+		//logic handled by subclasses
 		protected virtual void OnLoadMoreClicked (object sender, EventArgs e){
 		}
 	}

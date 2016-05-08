@@ -1,4 +1,11 @@
-﻿using System;
+﻿/* ShowResultsWidget.cs
+ * Subclass of EmbeddedWidget
+ * Handles the logic for displaying shows.
+ * Parameters are a parent (MainWindow), a list of shows, the start of the shows, and 
+ * a boolean (search or not)
+*/
+
+using System;
 using System.Collections.Generic;
 
 namespace VideoAggregator
@@ -7,7 +14,12 @@ namespace VideoAggregator
 	public class ShowResultsWidget : EmbeddedWidget
 	{
 		private List<Show> shows;
+
+		//This boolean determines where the results came from
+		//Either a search or a popular request
+		//Affects the logic of the loadmore button
 		private bool isSearch;
+
 		public ShowResultsWidget (MainWindow parent, List<Show> shows, int start, bool isSearch) : base()
 		{
 			this.parent = parent;
@@ -20,6 +32,7 @@ namespace VideoAggregator
 			this.Build ();
 			this.ShowAll ();
 
+			//only show loadmore button if there are more results to display
 			if ((shows.Count <= start + 25 && isSearch) || start + 25 > MainWindow.maxShows)
 				loadMoreButton.Destroy();
 		}
@@ -34,6 +47,9 @@ namespace VideoAggregator
 			populateTable ();
 		}
 
+
+		//Add the shows to the table
+		//Each one is stored in an eventbox
 		protected void populateTable(){
 			int curShow;
 			if (isSearch)
@@ -49,6 +65,7 @@ namespace VideoAggregator
 					if (curShow >= shows.Count)
 						break;
 
+					//show item
 					Gtk.Image img = new Gtk.Image();
 					if (shows[curShow].thumb != null)
 						img.Pixbuf = shows[curShow].thumb;
@@ -61,9 +78,11 @@ namespace VideoAggregator
 					Gtk.EventBox eventbox = new Gtk.EventBox ();
 					eventbox.Add (box);
 
+					//create event for clicking show
 					Func<Show, Gtk.ButtonPressEventHandler> ButtonPressWrapper = ((show) => ((s, e) => { OnShowSelected(s, e, show); }));
 					eventbox.ButtonPressEvent += ButtonPressWrapper(shows[curShow]);
 
+					//create hover events
 					Func<Gtk.EventBox, Gtk.EnterNotifyEventHandler> EnterNotifyWrapper = ((Gtk.EventBox eBox) => ((s, e) => {OnHoverEnter(s,e,eBox);}));
 					eventbox.EnterNotifyEvent += EnterNotifyWrapper(eventbox);
 
@@ -78,11 +97,13 @@ namespace VideoAggregator
 
 		}
 
+		//Event handler for selecting a show. Calls the MainWindow method
 		protected void OnShowSelected (object o, Gtk.ButtonPressEventArgs args, Show show)
 		{
 			parent.showSelected (show);
 		}
 
+		//Event handler for clicking the loadmore button. Calls the MainWindow method
 		protected override void OnLoadMoreClicked (object sender, EventArgs e)
 		{
 			if (isSearch) {

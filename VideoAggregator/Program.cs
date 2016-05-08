@@ -12,11 +12,6 @@ namespace VideoAggregator
 			win.Maximize ();
 			win.Show ();
 			Application.Run ();
-
-
-
-
-
 		}
 	}
 }

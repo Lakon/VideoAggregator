@@ -1,11 +1,18 @@
-﻿using System;
+﻿/* EpisodeResultsWidget.cs
+ * Subclass of EmbeddedWidget
+ * Handles the logic for displaying episodes
+ * Parameters are a parent (MainWindow), a season, and the start of the results
+*/
+
+using System;
 
 namespace VideoAggregator
 {
 	//[System.ComponentModel.ToolboxItem (true)]
 	public class EpisodeResultsWidget : EmbeddedWidget
 	{
-		private Season season;
+		private Season season; //holds the episodes
+
 		public EpisodeResultsWidget (MainWindow parent, Season season, int start) : base()
 		{
 			this.parent = parent;
@@ -15,6 +22,7 @@ namespace VideoAggregator
 			this.Build ();
 			this.ShowAll ();
 
+			//only show loadmore button if there are more results to display
 			if (season.episodes.Count <= start + 25)
 				loadMoreButton.Destroy ();
 		}
@@ -29,6 +37,8 @@ namespace VideoAggregator
 			populateTable ();
 		}
 
+		//Add the seasons to the table
+		//Each one is stored in an eventbox
 		protected void populateTable(){
 			int curEpisode = start;
 			for (uint i = 0; i < 5; i++) {
@@ -39,6 +49,7 @@ namespace VideoAggregator
 					if (curEpisode >= season.episodes.Count)
 						break;
 
+					//episode item
 					Gtk.Image img = new Gtk.Image();
 					if (season.episodes[curEpisode].thumb != null)
 						img.Pixbuf = season.episodes[curEpisode].thumb;
@@ -51,9 +62,11 @@ namespace VideoAggregator
 					Gtk.EventBox eventbox = new Gtk.EventBox ();
 					eventbox.Add (box);
 
+					//create event for clicking an episode
 					Func<Episode, Gtk.ButtonPressEventHandler> ButtonPressWrapper = ((ep) => ((s, e) => { OnEpisodeSelected(s, e, ep); }));
 					eventbox.ButtonPressEvent += ButtonPressWrapper(season.episodes[curEpisode]);
 
+					//create hover events
 					Func<Gtk.EventBox, Gtk.EnterNotifyEventHandler> EnterNotifyWrapper = ((Gtk.EventBox eBox) => ((s, e) => {OnHoverEnter(s,e,eBox);}));
 					eventbox.EnterNotifyEvent += EnterNotifyWrapper(eventbox);
 
@@ -67,11 +80,13 @@ namespace VideoAggregator
 			}
 		}
 
+		//Event handler for selecting an episode. Calls the MainWindow method
 		protected void OnEpisodeSelected (object o, Gtk.ButtonPressEventArgs args, Episode ep)
 		{
 			parent.episodeSelected (ep);
 		}
 
+		//Event handler for clicking the loadmore button. Calls the MainWindow method
 		protected override void OnLoadMoreClicked (object sender, EventArgs e)
 		{
 			parent.loadMoreResults (new EpisodeResultsWidget (parent, season, start + 25));

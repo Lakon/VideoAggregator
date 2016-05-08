@@ -1,14 +1,19 @@
-﻿using System;
+﻿/* Episode.cs
+ * Container class for the episode result
+ * Parameters are season number, episode number, title, and id
+*/
+
+using System;
 
 namespace VideoAggregator {
     public class Episode {
-        public string season;
-        public string num;
-        public string title;
-        public string id;
-        public string thumbURL;
+        public string season;		//season number
+        public string num;			//episode number
+        public string title;		
+        public string id;			//GuideBox API episode id
+        public string thumbURL;		//url for thumbnail
         public string desc;
-		public Gdk.Pixbuf thumb;
+		public Gdk.Pixbuf thumb;	//actual thumbnail img
 
 
         public Episode(string season, string num, string title, string id) {

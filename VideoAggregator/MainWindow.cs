@@ -1,4 +1,10 @@
-﻿using System;
+﻿/* MainWindow.cs
+ * Class displaying the MainWindow. Has the back button, source combo box,
+ * show and movie radio buttons, popular button, search bar, and search button.
+ * Controls the embedded widget, when it is created or destroyed.
+*/
+
+using System;
 //using Gtk;
 using System.Collections.Generic;
 using System.Net;
@@ -10,11 +16,15 @@ namespace VideoAggregator
 {
 	public partial class MainWindow: Gtk.Window
 	{
+		//static image files for use by the embeddedWidgets
 		public static Gdk.Pixbuf huluLogo;
 		public static Gdk.Pixbuf amazonLogo;
 		public static Gdk.Pixbuf youtubeLogo;
 
+		//max number of shows to load by popular button
 		public const int maxShows = 1000;
+
+		//max number of results in embeddedWidget
 		private const int maxShowsInEmbeddedWidget = 25;
 
 
@@ -22,8 +32,11 @@ namespace VideoAggregator
 		private Stack<EmbeddedWidget> previousWidgets;
 		private Gtk.Label errorLabel;
 		private Gdk.PixbufAnimation loadingAnimation;
+
+		//this token is used to cancel a task that is in progress
 		private CancellationTokenSource loadingResultsCancellationSource;
 
+		//property for the source currently selected in source combo box
 		private Source activeSource {
 			get {
 				switch (this.sourceComboBox.Active) {
@@ -56,6 +69,7 @@ namespace VideoAggregator
 				loadingAnimation = new Gdk.PixbufAnimation(imgStream);
 			}
 
+			//load the source images
 			using (Stream imgStream = GetType ().Assembly.GetManifestResourceStream ("hulu_logo")) { 
 				huluLogo = new Gdk.Pixbuf(imgStream);
 			}
@@ -72,11 +86,13 @@ namespace VideoAggregator
 			loadingResultsCancellationSource = new CancellationTokenSource ();
 
 			showLoadingScreen();
-			getPopShows (0);
+			getPopShows (0);		//first embedded widget is popular shows
 
 			this.ShowAll ();
 		}
 
+		//controls whether the back button is selectable
+		//if the stack is empty then it isnt
 		private void updateBackButton(){
 			if (previousWidgets.Count <= 0)
 				backButton.Sensitive = false;
@@ -103,6 +119,7 @@ namespace VideoAggregator
 		}
 
 
+		//goes to the url and gets the data (in bytes)
 		private byte[] getThumbNail(string url){
 			byte[] imageBytes = null;
 			try{
@@ -142,21 +159,28 @@ namespace VideoAggregator
 			this.ShowAll ();
 		}
 
+		//clears container and adds the current embeddedWidget to container
 		public void addEmbeddedWidgetToContainer(){
 			clearContainer ();
 			this.container.PackStart (embeddedWidget);
 		}
 
+		//called from the embeddedWidget whenever the loadmore button is clicked
 		public void loadMoreResults(EmbeddedWidget result){
 			clearContainer ();
 			embeddedWidget = result;
 			this.container.PackStart (embeddedWidget);
 		}
+
+		//called from ShowResultsWidget when the loadmore button is clicked
 		public void loadMorePopShows(int start){
 			showLoadingScreen ("Loading more shows");
 			getPopShows (start);
 		}
 
+		//called from ShowResultsWidget when a show is selected
+		//it shows a loading screen and then starts a task to load the seasons (or sources if its a movie)
+		//when its done loading it clears the container and adds the new embeddedWidget
 		public void showSelected(Show show){
 			showLoadingScreen("Loading " + show.title);
 
@@ -205,7 +229,9 @@ namespace VideoAggregator
 				
 		}
 
-
+		//called from SeasonResultsWidget when a season is selected
+		//it shows a loading screen and then starts a task to load the episodes
+		//when its done loading it clears the container and adds the new embeddedWidget
 		public void seasonSelected(Show show, int s){
 			showLoadingScreen ("Loading Season " + (s+1).ToString() + " of " + show.title);
 
@@ -253,7 +279,9 @@ namespace VideoAggregator
 			task.Start();
 		}
 
-
+		//called from EpisodeResultsWidget when an episode is selected
+		//it shows a loading screen and then starts a task to load the sources
+		//when its done loading it clears the container and adds the new embeddedWidget
 		public void episodeSelected(Episode episode){
 			showLoadingScreen("Loading Episode " + episode.num.ToString() + ". " + episode.title);
 
@@ -288,6 +316,9 @@ namespace VideoAggregator
 			task.Start();
 		}
 
+
+		//called from SourcesWidget when a source is selected
+		//it starts a browser at the url selected
 		public void sourceSelected(string source, List<string> urls){
 
 
@@ -299,18 +330,19 @@ namespace VideoAggregator
 
 				//minimize and launch Firefox
 				try{
-				this.Iconify();	
-				
+					//mac
+					this.Iconify();
 					System.Diagnostics.Process.Start ("/Applications/Firefox.app/Contents/MacOS/Firefox", urls [0]);
 
 				}catch (System.ComponentModel.Win32Exception){
 					try{
+						//linux
 						this.Iconify();
 						System.Diagnostics.Process.Start("/usr/bin/firefox" , urls [0]);
 
 					}catch(System.ComponentModel.Win32Exception){
 						try{
-							
+							//windows
 							System.Diagnostics.Process.Start ("firefox.exe", urls [0]);
 
 						}catch(System.ComponentModel.Win32Exception){
@@ -325,15 +357,17 @@ namespace VideoAggregator
 
 				//minimize and launch Chrome
 				try{
-				this.Iconify();
+					//mac
+					this.Iconify();
 					System.Diagnostics.Process.Start ("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome", urls [0]);
 				}catch (System.ComponentModel.Win32Exception){
 					try{
+						//linux
 						this.Iconify();
 						System.Diagnostics.Process.Start("/usr/bin/chrome" , urls [0]);
 					}catch(System.ComponentModel.Win32Exception){
 						try{
-							
+							//windows
 							System.Diagnostics.Process.Start ("chrome.exe", urls [0]);
 
 						}catch(System.ComponentModel.Win32Exception){
@@ -345,6 +379,8 @@ namespace VideoAggregator
 			}
 		}
 
+		//starts a task to load most popular shows or movies from guidebox
+		//then it loads the embeddedWidget
 		protected void getPopShows(int start){
 			//make a new CancellationSource for a new task
 			loadingResultsCancellationSource = new CancellationTokenSource ();
@@ -354,6 +390,8 @@ namespace VideoAggregator
 			Task task = new Task(() => {
 				cancelToken.ThrowIfCancellationRequested();
 				List<Show> shows = new List<Show>();
+
+				//tv
 				if (showRadioButton.Active){
 					//get the results from guidebox
 					shows = GuideBoxAPIWrapper.getTVShowIds (start, maxShowsInEmbeddedWidget, activeSource);
@@ -367,6 +405,8 @@ namespace VideoAggregator
 							show.thumb = new Gdk.Pixbuf(thumbNail);
 					}
 				}
+
+				//movies
 				else{
 					//get the results from guidebox
 					shows = GuideBoxAPIWrapper.getMovieIds (start, maxShowsInEmbeddedWidget, activeSource);
@@ -399,6 +439,7 @@ namespace VideoAggregator
 			task.Start();
 		}
 
+		//Event handler for closing window
 		protected void OnDeleteEvent (object sender, Gtk.DeleteEventArgs a){
 			//cancel any task that might be running
 			loadingResultsCancellationSource.Cancel ();
@@ -407,6 +448,10 @@ namespace VideoAggregator
 			a.RetVal = true;
 		}
 
+		//Event handler for clicking the back button
+		//first it cancels any task that might be running
+		//then it removes whatever is in the container
+		//and pops from the stack and adds it to the container
 		protected void OnBackButtonClicked (object sender, EventArgs e)
 		{
 			//cancel any task that might be running
@@ -424,6 +469,9 @@ namespace VideoAggregator
 			}
 		}
 
+		//Event handler for clicking the search button
+		//shows a loading screen and then creates a task to load the results
+		//and display them
 		protected void OnSearchButtonClicked (object sender, EventArgs e)
 		{
 			string searchText = searchEntry.Text.Trim();
@@ -449,6 +497,7 @@ namespace VideoAggregator
 				cancelToken.ThrowIfCancellationRequested();
 				List<Show> shows = new List<Show>();
 
+				//tv
 				if (showRadioButton.Active){
 					//get the results from guidebox
 					shows = GuideBoxAPIWrapper.getTVShowIds (searchText);
@@ -462,6 +511,8 @@ namespace VideoAggregator
 							show.thumb = new Gdk.Pixbuf(thumbNail);
 					}
 				}
+
+				//movies
 				else{
 					//get the results from guidebox
 					shows = GuideBoxAPIWrapper.getMovieIds (searchText);
@@ -496,6 +547,8 @@ namespace VideoAggregator
 			task.Start();
 		}
 
+		//Event handler for clicking the popular button
+		//shows a loading screen and then calls getPopShows
 		protected void OnPopButtonClicked (object sender, EventArgs e)
 		{
 			//cancel any task that might be running
@@ -511,12 +564,16 @@ namespace VideoAggregator
 
 		}
 
+		//Event handler for a change in the sourceComboBox
+		//just calls the embeddedWidget method to handle it
 		protected void OnSourceChanged (object sender, EventArgs e)
 		{
 			if (embeddedWidget != null)
 				embeddedWidget.OnSourceChanged (activeSource);
 		}
 
+		//Event handler for a change in the search bar
+		//simply determines if the search button is selectable or nor
 		protected void OnSearchEntryChanged (object sender, EventArgs e)
 		{
 			string searchText = searchEntry.Text.Trim();
@@ -526,6 +583,8 @@ namespace VideoAggregator
 				searchButton.Sensitive = false;
 		}
 
+		//Event handler for the about button
+		//shows the about dialog
 		protected void OnAboutSelected (object sender, EventArgs e)
 		{
 			// Create a new About dialog
@@ -545,3 +604,4 @@ namespace VideoAggregator
 		}
 	}
 }
+
